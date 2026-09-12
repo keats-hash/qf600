@@ -1,0 +1,57 @@
+import os
+import numpy as np
+import pandas as pd
+
+def run_portfolio_construction(input_path: str, output_path: str):
+    print("Loading signal-enhanced dataset...")
+    df = pd.read_parquet(input_path)
+    df['rebalance_date'] = pd.to_datetime(df['rebalance_date'])
+
+    # 1. Ensure Chronological Order per PERMNO
+    df = df.sort_values(['permno', 'rebalance_date']).reset_index(drop=True)
+
+    # 2. Map forward return cleanly to prevent alignment breaks from row shifting.
+    df['next_date'] = df.groupby('permno')['rebalance_date'].shift(-1)
+    df['holding_return_t1'] = df.groupby('permno')['true_total_return'].shift(-1)
+
+    # Invalidate forward returns where the gap to the next date is greater than 35 days
+    invalid_gap = (df['next_date'] - df['rebalance_date']).dt.days > 35
+    df.loc[invalid_gap, 'holding_return_t1'] = np.nan
+
+    # 3. Filter ONLY for valid signals at date t
+    # (Optional but recommended: also drop rows where holding_return_t1 is now NaN)
+    valid_panel = df.dropna(subset=['momentum_12_1', 'holding_return_t1']).copy()
+
+    # 4. Point-in-Time Cross-Sectional Ranking into 10 Deciles
+    print("Ranking stocks cross-sectionally into 10 momentum deciles...")
+    valid_panel['decile'] = valid_panel.groupby('rebalance_date')['momentum_12_1'].transform(
+        lambda x: pd.qcut(x.rank(method='first'), 10, labels=False) + 1
+    )
+    
+    # 5. Compute Realized Holding Period Returns (t+1)
+    print("Assigning position weights and computing portfolio holding returns...")
+    decile_returns = valid_panel.groupby(['rebalance_date', 'decile'])['holding_return_t1'].mean().unstack()
+    decile_returns.columns = [f'Decile_{int(col)}' for col in decile_returns.columns]
+
+    # 6. Construct Dollar-Neutral Long-Short Spread
+    decile_returns['Long_Leg'] = decile_returns['Decile_10']
+    decile_returns['Short_Leg'] = decile_returns['Decile_1']
+    decile_returns['Long_Short_Spread'] = decile_returns['Long_Leg'] - decile_returns['Short_Leg']
+
+    # Save Output
+    portfolio_df = decile_returns.reset_index()
+    portfolio_df.to_parquet(output_path, index=False)
+    
+    print("\n--- Summary of Strategy Monthly Returns ---")
+    print(portfolio_df[['rebalance_date', 'Decile_1', 'Decile_10', 'Long_Short_Spread']].head(10))
+    print(f"\nSaved monthly portfolio performance to: {output_path}")
+
+if __name__ == "__main__":
+    processed_dir = '../data/processed' if os.path.exists('../data/processed') else '.'
+    input_file = os.path.join(processed_dir, "backtest_panel_with_signals.parquet")
+    output_file = os.path.join(processed_dir, "momentum_strategy_returns.parquet")
+    
+    run_portfolio_construction(
+        input_path=input_file,
+        output_path=output_file
+    )
