@@ -1,0 +1,93 @@
+==============================================================================
+STEP 5 -- TRACK A SELECTION (formation-window performance ranking)
+==============================================================================
+Formation window : 2014-01 .. 2019-12
+Evaluation window: 2020-01 .. 2024-12  (QUARANTINED from this step)
+Eligible pool    : 30 members
+
+------------------------------------------------------------------------------
+FULL RANKED POOL (rejected members shown too -- they are the control group)
+------------------------------------------------------------------------------
+rank  sel filer_id                                     ann%   mo  trades  party
+   1  *** house_bradleys_schneider                    38.2%   18      63      D
+   2  *** house_suzank_delbene                        28.7%   16      16      D
+   3  *** house_lamar_smith                           27.6%   19      41      R
+   4  *** house_katherinem_clark                      23.4%   13      32      D
+   5  *** house_alans_lowenthal                       21.5%   19     161      D
+   6  *** house_bob_gibbs                             18.2%   20      27      R
+   7  *** house_pete_sessions                         18.1%   20      18      R
+   8  *** house_dwight_evans                          15.7%   13      13      D
+   9      senate_william_cassidy                      15.6%   52     160      R
+  10      senate_john_hoeven                          14.4%   59     157      R
+  11      house_john_rutherford                       14.3%   16      87      R
+  12      house_greg_gianforte                        14.2%   18     448      R
+  13      senate_sheldon_whitehouse                   13.4%   58     536      D
+  14      house_josh_gottheimer                       13.3%   16     235      D
+  15      house_kmichael_conaway                      12.4%   19      61      R
+  16      senate_garyc_peters                         12.0%   54      36      D
+  17      house_thomas_macarthur                      11.8%   19     305      R
+  18      senate_shelleym_capito                      11.7%   52     465      R
+  19      senate_susanm_collins                       11.4%   59     135      R
+  20      house_thomasj_rooney                         9.8%   18      30      R
+  21      house_gary_palmer                            9.4%   13     176      R
+  22      senate_johnf_reed                            7.3%   43     190      D
+  23      house_davida_trott                           6.7%   14      38      R
+  24      senate_amitchell_mcconnelljr                 5.4%   19      12      R
+  25      senate_patty_murray                          5.2%   12     161      D
+  26      house_carlos_curbelo                         2.4%   13      47      R
+  27      house_debbie_dingell                        -1.1%   20      34      D
+  28      senate_anguss_kingjr                        -3.2%   22      22      I
+  29      house_peter_welch                          -17.2%   16      24      D
+  30      senate_rafaele_cruz                       -115.0%   12      10      R
+
+------------------------------------------------------------------------------
+SELECTED: top 25% = 8 of 30 members
+------------------------------------------------------------------------------
+  house_bradleys_schneider                 Bradley S. Schneider          D    38.2%/yr formation
+  house_suzank_delbene                     Suzan K. DelBene              D    28.7%/yr formation
+  house_lamar_smith                        Lamar Smith                   R    27.6%/yr formation
+  house_katherinem_clark                   Katherine M. Clark            D    23.4%/yr formation
+  house_alans_lowenthal                    Alan S. Lowenthal             D    21.5%/yr formation
+  house_bob_gibbs                          Bob Gibbs                     R    18.2%/yr formation
+  house_pete_sessions                      Pete Sessions                 R    18.1%/yr formation
+  house_dwight_evans                       Dwight Evans                  D    15.7%/yr formation
+
+  Party split: {'D': 5, 'R': 3}
+  Chamber    : {'house': 8}
+  Formation mean return of selected group: 23.93%/yr vs pool 8.19%/yr
+
+  The selected group outperformed IN FORMATION BY CONSTRUCTION. That number
+  is not evidence of anything -- it is the selection itself. The test is
+  whether it persists into the evaluation window (Steps 7-8).
+
+------------------------------------------------------------------------------
+CHANGE VS PHASE-1 SELECTED LIST (required log -- the holding rule recomputed
+invested months, so the pool and therefore the selection may differ)
+------------------------------------------------------------------------------
+  Phase 1 (7 members, implicit-exit long-only construction):
+    house_bradleys_schneider
+    house_lamar_smith
+    house_bob_gibbs
+    house_katherinem_clark
+    house_dwight_evans
+    house_pete_sessions
+    senate_william_cassidy
+  Now (8 members, explicit 12-month rule):
+    house_bradleys_schneider
+    house_suzank_delbene
+    house_lamar_smith
+    house_katherinem_clark
+    house_alans_lowenthal
+    house_bob_gibbs
+    house_pete_sessions
+    house_dwight_evans
+
+  ADDED vs Phase 1   (2): ['house_suzank_delbene', 'house_alans_lowenthal']
+  DROPPED vs Phase 1 (1): ['senate_william_cassidy']
+  Overlap: 6/7
+  Downstream deck/summary MUST quote the 'Now' list, not the Phase-1 list.
+
+  ASSERTION PASSED: no evaluation-window month entered the selection.
+  Ranking used months 2015-02 .. 2019-12 only.
+
+Saved -> /Users/keatzram/Desktop/keats/QF_600/data/clean/trackA_selected.csv and trackA_ranked_pool.csv

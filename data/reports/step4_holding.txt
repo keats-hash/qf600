@@ -1,0 +1,64 @@
+==============================================================================
+STEP 4 -- HOLDING-PERIOD PANEL
+==============================================================================
+Rule: 12-month fixed window from FILING date, entry lag 1 month(s)
+Legs earn returns in months  t+1 .. t+12  where t = filing month
+
+Trades in span: 22,432 (209 members)
+Exploded to 269,184 leg-months
+Priced leg-months: 238,198  (dropped 30,986 unpriced leg-months from 2,595 trades)
+Leg-months inside study span: 221,693
+
+Leg concentration (long legs), legs per distinct ticker in a member-month:
+  median 1.18, p75 1.71, p95 4.00, max 15.00
+  -> equal-weight ACROSS LEGS therefore conviction-weights repeatedly-bought
+     names. Step 9 reports a de-duplicated variant (one leg per ticker).
+
+Open long legs per member-month: median 7, p25 3, p75 24, max 291
+
+------------------------------------------------------------------------------
+ELIGIBILITY RECOMPUTE UNDER THE EXPLICIT HOLDING RULE
+------------------------------------------------------------------------------
+  Members with >=10 formation trades : 45
+  Members with >=12 formation invested months : 40
+  ELIGIBLE POOL (both conditions)          : 30
+
+  Cleared the trade floor but NOT the invested-month floor (15):
+    house_bryangeorge_steil                     10 trades,  0 invested months, first buy no buys
+    house_davidb_mckinley                       89 trades, 11 invested months, first buy 2019-01
+    house_davidp_joyce                          45 trades,  7 invested months, first buy 2019-05
+    house_dean_phillips                         58 trades, 10 invested months, first buy 2019-02
+    house_donaldsternoff_beyer_jr               87 trades,  0 invested months, first buy 2019-12
+    house_elizabeth_fletcher                    56 trades,  8 invested months, first buy 2019-04
+    house_gilbert_cisneros                     179 trades, 10 invested months, first buy 2019-02
+    house_mikie_sherrill                        43 trades,  7 invested months, first buy 2019-05
+    house_nicholasvan_taylor                   229 trades, 10 invested months, first buy 2019-02
+    house_susie_lee                            263 trades,  9 invested months, first buy 2019-03
+    house_zoe_lofgren                           17 trades,  0 invested months, first buy 2018-12
+    senate_jerry_moran                          97 trades,  7 invested months, first buy 2019-05
+    senate_tammy_duckworth                      15 trades,  0 invested months, first buy 2018-01
+    senate_thomasr_tillis                       99 trades,  0 invested months, first buy no buys
+    senate_tina_smith                           18 trades,  0 invested months, first buy 2018-11
+
+  WHY THIS HAPPENS -- worth stating, because it is not a bug and it
+  materially changes the pool. Two distinct causes:
+    (a) LATE ARRIVALS. Most of these members' first purchase falls in
+        2019, at the very end of the formation window. They are largely
+        the freshman class sworn in January 2019. A high trade count
+        does NOT give them a formation track record: their legs only
+        start earning at the window's edge, so there is no formation
+        performance to rank them on. Ranking them anyway would score
+        them on a couple of months of noise.
+    (b) SELLERS ONLY. Some members made no PURCHASES in formation at
+        all, so they open no long legs. Invested months counts long
+        legs, because the long-only construction is what the ranking
+        uses.
+  Both exclusions are structural, applied before any return was ranked,
+  and identical in spirit to the trade-count floor.
+
+  NOTE: this pool is recomputed from scratch under the 12-month rule and
+  may differ from the Phase-1 (implicit-exit) pool. Step 5 logs the
+  resulting change to the SELECTED member list.
+
+Saved panel -> /Users/keatzram/Desktop/keats/QF_600/data/clean/held_positions.parquet  (221,693 rows)
+Saved eligible pool -> /Users/keatzram/Desktop/keats/QF_600/data/clean/eligible_pool.csv (30 members)

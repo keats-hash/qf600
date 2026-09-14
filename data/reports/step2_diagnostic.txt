@@ -1,0 +1,109 @@
+==============================================================================
+STEP 2 -- TRADE-COUNT DIAGNOSTIC  (counts and dates ONLY, never returns)
+==============================================================================
+Input: 33,522 filtered trades, 259 members, filing dates 2015-01 .. 2026-09
+
+Coverage by filing year (why the early years are unusable):
+    2015     293 trades   10 members  #
+    2016     407 trades   10 members  ##
+    2017     576 trades   16 members  ###
+    2018   1,431 trades   47 members  #########
+    2019   2,473 trades   63 members  ###############
+    2020   3,795 trades   87 members  ########################
+    2021   3,732 trades  104 members  #######################
+    2022   3,044 trades   86 members  ###################
+    2023   4,124 trades   81 members  ##########################
+    2024   2,557 trades   85 members  ################
+    2025   7,207 trades   99 members  ##############################################
+    2026   3,883 trades   97 members  ########################
+
+------------------------------------------------------------------------------
+CANDIDATE SPLIT A:  formation 2014-01..2018-12   evaluation 2019-01..2024-12
+------------------------------------------------------------------------------
+  FORMATION window
+    trades            : 2,707
+    distinct members  : 55
+    months spanned    : 48
+    trades/member     : min 1, p25 3, median 9, p75 58, max 486
+    members with >=5     :  36  (65.5% of window members)
+    members with >=10    :  27  (49.1% of window members)
+    members with >=20    :  19  (34.5% of window members)
+    party (members)   : {'D': 30, 'R': 24, 'I': 1}
+  EVALUATION window
+    trades            : 19,725
+    distinct members  : 198
+    months spanned    : 72
+    trades/member     : min 1, p25 4, median 20, p75 92, max 2104
+    members with >=5     : 144  (72.7% of window members)
+    members with >=10    : 125  (63.1% of window members)
+    members with >=20    :  99  (50.0% of window members)
+    party (members)   : {'R': 107, 'D': 90, 'I': 1}
+  EVALUATION months available for regression: 72
+  RETENTION: 27 members clear >=10 formation trades; 23 of them (85%) also trade in evaluation
+  -> top quartile of a 23-member pool = ~6 selected members
+
+------------------------------------------------------------------------------
+CANDIDATE SPLIT B:  formation 2014-01..2019-12   evaluation 2020-01..2024-12
+------------------------------------------------------------------------------
+  FORMATION window
+    trades            : 5,180
+    distinct members  : 81
+    months spanned    : 60
+    trades/member     : min 1, p25 4, median 15, p75 63, max 536
+    members with >=5     :  58  (71.6% of window members)
+    members with >=10    :  45  (55.6% of window members)
+    members with >=20    :  36  (44.4% of window members)
+    party (members)   : {'D': 44, 'R': 36, 'I': 1}
+  EVALUATION window
+    trades            : 17,252
+    distinct members  : 186
+    months spanned    : 60
+    trades/member     : min 1, p25 4, median 17, p75 88, max 1999
+    members with >=5     : 133  (71.5% of window members)
+    members with >=10    : 114  (61.3% of window members)
+    members with >=20    :  90  (48.4% of window members)
+    party (members)   : {'R': 100, 'D': 85, 'I': 1}
+  EVALUATION months available for regression: 60
+  RETENTION: 45 members clear >=10 formation trades; 34 of them (76%) also trade in evaluation
+  -> top quartile of a 34-member pool = ~8 selected members
+
+------------------------------------------------------------------------------
+CANDIDATE SPLIT C:  formation 2014-01..2020-12   evaluation 2021-01..2024-12
+------------------------------------------------------------------------------
+  FORMATION window
+    trades            : 8,975
+    distinct members  : 119
+    months spanned    : 72
+    trades/member     : min 1, p25 5, median 15, p75 66, max 737
+    members with >=5     :  93  (78.2% of window members)
+    members with >=10    :  70  (58.8% of window members)
+    members with >=20    :  51  (42.9% of window members)
+    party (members)   : {'D': 60, 'R': 58, 'I': 1}
+  EVALUATION window
+    trades            : 13,457
+    distinct members  : 163
+    months spanned    : 48
+    trades/member     : min 1, p25 4, median 15, p75 80, max 1706
+    members with >=5     : 115  (70.6% of window members)
+    members with >=10    :  98  (60.1% of window members)
+    members with >=20    :  76  (46.6% of window members)
+    party (members)   : {'R': 88, 'D': 74, 'I': 1}
+  EVALUATION months available for regression: 48
+  RETENTION: 70 members clear >=10 formation trades; 48 of them (69%) also trade in evaluation
+  -> top quartile of a 48-member pool = ~12 selected members
+
+==============================================================================
+COMMITTED DECISION (frozen in config.py; do not re-tune)
+==============================================================================
+  Split      : formation 2014-01..2019-12, evaluation 2020-01..2024-12   [candidate B]
+  Rationale  : disclosure coverage is effectively empty before 2015 and thin
+               through 2016. Candidate A leaves too few members clearing the
+               trade floor; candidate C shortens evaluation to 48 months and
+               pushes formation into the COVID regime. B maximises the size of
+               the eligible pool while keeping a full 60-month evaluation
+               window. Chosen on COUNTS ONLY -- no return was computed.
+  Floor      : >=10 formation trades AND >=12 invested months (invested months recomputed in Step 4)
+  Selection  : top 25% of the eligible pool by formation return
+
+  STOP. The split is now frozen. Step 9 tests robustness to alternative
+  boundaries; it does NOT re-choose them based on which alpha looks better.

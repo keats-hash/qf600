@@ -1,0 +1,126 @@
+==============================================================================================================
+STEP 8 -- CAPM AND 4-FACTOR REGRESSIONS  (Newey-West HAC, 6 lags)
+==============================================================================================================
+Evaluation window 2020-01 .. 2024-12. alpha annualised (x12). Significance: * .10  ** .05  *** .01
+HAC lags chosen for the 12-month overlapping holding windows, which make
+consecutive monthly returns mechanically autocorrelated.
+
+group                      constr      model     alpha/yr      t    95% CI (ann)        beta    R2    N
+--------------------------------------------------------------------------------------------------------------
+trackA_pool_all            long_only   CAPM        -1.30%  -0.60    [  -5.5%,   2.9%]   1.00  0.95   60
+trackA_pool_all            long_only   FF4         -0.97%  -0.73    [  -3.6%,   1.6%]   0.99  0.97   60
+
+trackA_pool_all            long_short  CAPM        -3.64%  -1.75*   [  -7.7%,   0.4%]  -0.14  0.20   60
+trackA_pool_all            long_short  FF4         -3.74%  -1.63    [  -8.2%,   0.8%]  -0.14  0.22   60
+
+trackA_rejected            long_only   CAPM        -3.38%  -1.26    [  -8.6%,   1.9%]   0.99  0.92   60
+trackA_rejected            long_only   FF4         -2.83%  -1.74*   [  -6.0%,   0.4%]   0.96  0.95   60
+
+trackA_rejected            long_short  CAPM        -5.40%  -2.60*** [  -9.5%,  -1.3%]  -0.11  0.15   60
+trackA_rejected            long_short  FF4         -5.35%  -2.43**  [  -9.7%,  -1.0%]  -0.12  0.16   60
+
+trackA_selected            long_only   CAPM         3.49%   1.34    [  -1.6%,   8.6%]   1.03  0.90   60
+trackA_selected            long_only   FF4          3.42%   1.56    [  -0.9%,   7.7%]   1.03  0.90   60
+
+trackA_selected            long_short  CAPM        -0.40%  -0.09    [  -8.8%,   8.0%]  -0.18  0.09   60
+trackA_selected            long_short  FF4         -0.64%  -0.15    [  -8.9%,   7.7%]  -0.17  0.11   60
+
+trackB_agriculture         long_only   CAPM        -0.68%  -0.09    [ -15.4%,  14.0%]   0.56  0.25   51
+trackB_agriculture         long_only   FF4         -3.58%  -0.50    [ -17.7%,  10.5%]   0.56  0.33   51
+
+trackB_agriculture         long_short  CAPM         1.13%   0.22    [  -8.8%,  11.1%]  -0.37  0.19   59
+trackB_agriculture         long_short  FF4          2.31%   0.47    [  -7.3%,  11.9%]  -0.44  0.21   59
+
+trackB_armed_services      long_only   CAPM        -2.11%  -0.31    [ -15.2%,  11.0%]   1.24  0.62   59
+trackB_armed_services      long_only   FF4          0.47%   0.10    [  -9.0%,  10.0%]   1.08  0.69   59
+
+trackB_armed_services      long_short  CAPM        -9.26%  -1.71*   [ -19.9%,   1.4%]  -0.01  0.00   59
+trackB_armed_services      long_short  FF4         -9.22%  -1.58    [ -20.7%,   2.2%]  -0.01  0.00   59
+
+trackB_combined            long_only   CAPM        -5.34%  -1.11    [ -14.8%,   4.1%]   1.10  0.87   59
+trackB_combined            long_only   FF4         -4.20%  -1.20    [ -11.1%,   2.7%]   1.02  0.91   59
+
+trackB_combined            long_short  CAPM        -3.47%  -1.54    [  -7.9%,   0.9%]  -0.11  0.09   59
+trackB_combined            long_short  FF4         -3.75%  -1.51    [  -8.6%,   1.1%]  -0.10  0.10   59
+
+trackB_energy_commerce     long_only   CAPM       -17.03%  -0.96    [ -51.9%,  17.8%]   1.26  0.41   54
+trackB_energy_commerce     long_only   FF4        -15.59%  -1.64    [ -34.2%,   3.0%]   1.03  0.64   54
+
+trackB_energy_commerce     long_short  CAPM        -9.98%  -1.51    [ -22.9%,   2.9%]   0.20  0.04   59
+trackB_energy_commerce     long_short  FF4         -7.50%  -1.18    [ -20.0%,   5.0%]   0.06  0.10   59
+
+trackB_financial_services  long_only   CAPM       -19.66%  -1.40    [ -47.2%,   7.9%]   1.40  0.64   59
+trackB_financial_services  long_only   FF4        -17.56%  -1.59    [ -39.2%,   4.1%]   1.25  0.75   59
+
+trackB_financial_services  long_short  CAPM        -2.50%  -0.44    [ -13.7%,   8.7%]  -0.31  0.13   59
+trackB_financial_services  long_short  FF4         -6.18%  -1.40    [ -14.8%,   2.4%]  -0.12  0.37   59
+
+trackB_health              long_only   CAPM         3.10%   0.76    [  -4.9%,  11.1%]   0.74  0.61   58
+trackB_health              long_only   FF4          2.07%   0.52    [  -5.7%,   9.8%]   0.78  0.64   58
+
+trackB_health              long_short  CAPM        -0.77%  -0.29    [  -5.9%,   4.4%]  -0.10  0.06   58
+trackB_health              long_short  FF4          0.26%   0.09    [  -5.5%,   6.1%]  -0.15  0.13   58
+
+trackB_science_commerce    long_only   CAPM         6.33%   1.80*   [  -0.6%,  13.2%]   0.99  0.84   59
+trackB_science_commerce    long_only   FF4          6.78%   2.16**  [   0.6%,  12.9%]   0.98  0.86   59
+
+trackB_science_commerce    long_short  CAPM         0.69%   0.17    [  -7.3%,   8.7%]  -0.07  0.02   59
+trackB_science_commerce    long_short  FF4         -0.16%  -0.04    [  -7.3%,   6.9%]  -0.03  0.09   59
+
+trackB_transport_infra     long_only   CAPM        -1.40%  -0.28    [ -11.3%,   8.5%]   1.14  0.62   57
+trackB_transport_infra     long_only   FF4         -1.74%  -0.32    [ -12.4%,   8.9%]   1.14  0.63   57
+
+trackB_transport_infra     long_short  CAPM         5.79%   0.49    [ -17.3%,  28.8%]  -0.72  0.31   58
+trackB_transport_infra     long_short  FF4          6.00%   0.59    [ -13.8%,  25.8%]  -0.69  0.41   58
+
+==============================================================================================================
+READING THE TABLE
+==============================================================================================================
+HEADLINE (Track A, long_only, CAPM):
+  alpha = +3.49%/yr, t = 1.34, 95% CI [-1.6%, +8.6%], beta = 1.03, R2 = 0.90, N = 60
+  -> NO detectable risk-adjusted alpha at the 5% level.
+  -> CI width 10.2 percentage points: with N=60 months this
+     test could only detect a very large effect, so a null here is better
+     described as UNDERPOWERED than as proof of no skill.
+
+BETA: long-only vs long-short (the directional-timing check)
+  trackA_pool_all            long-only beta  1.00  ->  long-short beta -0.14
+  trackA_rejected            long-only beta  0.99  ->  long-short beta -0.11
+  trackA_selected            long-only beta  1.03  ->  long-short beta -0.18
+  trackB_agriculture         long-only beta  0.56  ->  long-short beta -0.37
+  trackB_armed_services      long-only beta  1.24  ->  long-short beta -0.01
+  trackB_combined            long-only beta  1.10  ->  long-short beta -0.11
+  trackB_energy_commerce     long-only beta  1.26  ->  long-short beta  0.20
+  trackB_financial_services  long-only beta  1.40  ->  long-short beta -0.31
+  trackB_health              long-only beta  0.74  ->  long-short beta -0.10
+  trackB_science_commerce    long-only beta  0.99  ->  long-short beta -0.07
+  trackB_transport_infra     long-only beta  1.14  ->  long-short beta -0.72
+  A long-short beta near zero means the sale disclosures genuinely offset
+  market exposure. A long-short beta that stays high means the 'short' legs
+  are not hedging anything and the portfolio is still just long the market.
+
+ALPHA DECAY: CAPM vs 4-factor
+  trackA_pool_all            long_only   CAPM   -1.30%  -> FF4   -0.97%  (t -0.60 -> -0.73)
+  trackA_pool_all            long_short  CAPM   -3.64%  -> FF4   -3.74%  (t -1.75 -> -1.63)
+  trackA_rejected            long_only   CAPM   -3.38%  -> FF4   -2.83%  (t -1.26 -> -1.74)
+  trackA_rejected            long_short  CAPM   -5.40%  -> FF4   -5.35%  (t -2.60 -> -2.43)
+  trackA_selected            long_only   CAPM   +3.49%  -> FF4   +3.42%  (t  1.34 ->  1.56)
+  trackA_selected            long_short  CAPM   -0.40%  -> FF4   -0.64%  (t -0.09 -> -0.15)
+  trackB_agriculture         long_only   CAPM   -0.68%  -> FF4   -3.58%  (t -0.09 -> -0.50)
+  trackB_agriculture         long_short  CAPM   +1.13%  -> FF4   +2.31%  (t  0.22 ->  0.47)
+  trackB_armed_services      long_only   CAPM   -2.11%  -> FF4   +0.47%  (t -0.31 ->  0.10)
+  trackB_armed_services      long_short  CAPM   -9.26%  -> FF4   -9.22%  (t -1.71 -> -1.58)
+  trackB_combined            long_only   CAPM   -5.34%  -> FF4   -4.20%  (t -1.11 -> -1.20)
+  trackB_combined            long_short  CAPM   -3.47%  -> FF4   -3.75%  (t -1.54 -> -1.51)
+  trackB_energy_commerce     long_only   CAPM  -17.03%  -> FF4  -15.59%  (t -0.96 -> -1.64)
+  trackB_energy_commerce     long_short  CAPM   -9.98%  -> FF4   -7.50%  (t -1.51 -> -1.18)
+  trackB_financial_services  long_only   CAPM  -19.66%  -> FF4  -17.56%  (t -1.40 -> -1.59)
+  trackB_financial_services  long_short  CAPM   -2.50%  -> FF4   -6.18%  (t -0.44 -> -1.40)
+  trackB_health              long_only   CAPM   +3.10%  -> FF4   +2.07%  (t  0.76 ->  0.52)
+  trackB_health              long_short  CAPM   -0.77%  -> FF4   +0.26%  (t -0.29 ->  0.09)
+  trackB_science_commerce    long_only   CAPM   +6.33%  -> FF4   +6.78%  (t  1.80 ->  2.16)
+  trackB_science_commerce    long_short  CAPM   +0.69%  -> FF4   -0.16%  (t  0.17 -> -0.04)
+  trackB_transport_infra     long_only   CAPM   -1.40%  -> FF4   -1.74%  (t -0.28 -> -0.32)
+  trackB_transport_infra     long_short  CAPM   +5.79%  -> FF4   +6.00%  (t  0.49 ->  0.59)
+
+Saved -> /Users/keatzram/Desktop/keats/QF_600/data/clean/regression_results.csv

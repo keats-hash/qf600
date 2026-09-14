@@ -1,0 +1,128 @@
+# =============================================================================
+# COMMITTEE -> GICS SECTOR MAP   *** COMMITTED 2026-09-14 -- DO NOT TUNE ***
+# =============================================================================
+# This map is AUTHOR-DEFINED. No dataset assigns committees to sectors, so this
+# is a judgement call and must be stated as one in the write-up.
+#
+# Two rules govern it, and both are what keep Track B honest:
+#
+#   1. GRANULARITY IS GICS *SECTOR* LEVEL, never industry level. Deliberate:
+#      sector-level groups stay large enough to have any statistical power at
+#      all. Industry-level would shrink groups to a handful of trades and turn
+#      every result into noise.
+#
+#   2. EVERY ROW NEEDS A ONE-LINE OVERSIGHT RATIONALE ('why'). The rationale IS
+#      the test for inclusion -- a row with no defensible oversight->sector story
+#      does not go in. This stops the map from being quietly reverse-engineered
+#      from which pairings happen to produce alpha.
+#
+# The map goes committee -> SECTOR, never committee -> hand-picked tickers.
+# Picking names would smuggle outcome selection straight back in. The pipeline is
+# rules-based end to end: committee->sector here, ticker->sector from a cached
+# reference source, and the test runs only where the two agree.
+#
+# `match` entries are matched case-insensitively as substrings against the
+# official committee name from @unitedstates/congress-legislators, restricted to
+# the named chamber.
+# =============================================================================
+
+baseline:
+  - key: financial_services
+    label: "Financial Services / Banking, Housing & Urban Affairs"
+    match:
+      house:  ["Financial Services"]
+      senate: ["Banking, Housing, and Urban Affairs"]
+    sectors: ["Financials", "Real Estate"]
+    why: "writes and oversees banking, securities and housing-finance rules"
+
+  - key: armed_services
+    label: "Armed Services"
+    match:
+      house:  ["Armed Services"]
+      senate: ["Armed Services"]
+    sectors: ["Industrials"]
+    why: "sets the defense budget and weapons-procurement policy"
+    note: "defense primes & aerospace sit in Industrials under GICS, not in a
+           separate defense sector"
+
+  - key: energy_commerce
+    label: "Energy & Commerce / Energy & Natural Resources"
+    match:
+      house:  ["Energy and Commerce"]
+      senate: ["Energy and Natural Resources"]
+    sectors: ["Energy", "Utilities"]
+    why: "oversees energy production, grid and utility regulation"
+    note: "BROAD COMMITTEE -- House Energy & Commerce also touches Health Care and
+           Communication Services. The committee->sector link is genuinely coarser
+           here than elsewhere. Logged as a limitation rather than forced into a
+           tidy one-to-one; the map-robustness variant 'ec_health' re-runs this row
+           as Health Care to show the conclusion does not hinge on the choice."
+
+  - key: health
+    label: "Health, Education, Labor & Pensions (HELP) / Ways & Means health subcmte,
+            E&C health subcmte"
+    match:
+      house:  []
+      senate: ["Health, Education, Labor, and Pensions"]
+    # The House has no single health committee. Health jurisdiction sits in the
+    # HEALTH SUBCOMMITTEES of Ways & Means and of Energy & Commerce, so this row
+    # is matched at SUBCOMMITTEE level on the House side. Matching the full Ways &
+    # Means committee instead would sweep in every tax-writing member and dilute
+    # the oversight claim this track is built on.
+    subcommittee_match:
+      house:
+        - committee: "Ways and Means"
+          subcommittee: "Health"
+        - committee: "Energy and Commerce"
+          subcommittee: "Health"
+    sectors: ["Health Care"]
+    why: "oversees the drug approval pathway, Medicare/Medicaid and health regulation"
+    note: "GICS places pharma and biotech inside Health Care, so no separate row is
+           needed for them"
+
+  - key: agriculture
+    label: "Agriculture"
+    match:
+      house:  ["Agriculture"]
+      senate: ["Agriculture, Nutrition, and Forestry"]
+    sectors: ["Consumer Staples"]
+    why: "sets farm policy, subsidies and food regulation"
+
+  - key: science_commerce
+    label: "Science, Space & Technology / Commerce, Science & Transportation"
+    match:
+      house:  ["Science, Space, and Technology"]
+      senate: ["Commerce, Science, and Transportation"]
+    sectors: ["Information Technology", "Communication Services"]
+    why: "oversees tech, telecom and communications policy"
+
+  - key: transport_infra
+    label: "Transportation & Infrastructure"
+    match:
+      house:  ["Transportation and Infrastructure"]
+      senate: ["Environment and Public Works"]
+    sectors: ["Industrials", "Materials"]
+    why: "sets transport, infrastructure and public-works policy"
+
+# -----------------------------------------------------------------------------
+# MAP-ROBUSTNESS VARIANTS
+# -----------------------------------------------------------------------------
+# Each varies ONE debatable mapping decision. Reported beside the baseline in
+# Step 9. The point is to convert the objection "you chose the map to get the
+# answer" into the demonstration "the answer survives reasonable map choices".
+# ALL variants are reported, including any that disagree with the baseline.
+# -----------------------------------------------------------------------------
+variants:
+  ec_health:
+    description: "Energy & Commerce -> Health Care instead of Energy/Utilities"
+    rationale: "E&C's health subcommittee is arguably its most consequential; if the
+                baseline assignment drove the result, this flips it"
+    override:
+      energy_commerce: ["Health Care"]
+
+  no_real_estate:
+    description: "Financial Services -> Financials only (Real Estate dropped)"
+    rationale: "housing finance is a defensible but weaker link to listed REITs than
+                to banks and brokers"
+    override:
+      financial_services: ["Financials"]

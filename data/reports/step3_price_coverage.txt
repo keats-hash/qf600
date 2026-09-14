@@ -1,0 +1,37 @@
+STEP 3 -- PRICE COVERAGE
+============================================================
+Tickers traded : 2,692
+Tickers priced : 2,075 (77.1%)
+Tickers missing: 617
+
+Trades dropped for want of a price: 2,366 (10.5% of in-span trades)
+
+Unpriced tickers (delisted, acquired, or bad symbols):
+  3V64.TI, AAN, ABB, ABC, ABCO, ABMD, ABQCX, ACE, ACST, ADS, AE, AESE, AFSI, AGAE, AGN, AGR, AGU, AIMC, AJINY, AKRO, AKRX, AL, ALE, ALEX, ALLK, ALLY.A, ALTR, ALXN, ALYF, AMCRY, AMED, AMEH, AMEX, AMJ, AMSG, AMWD, ANDX, ANSS, ANZBY, APC, APEN, APHA, APPAD, APY, AQFH, AQUA, ARGO, ARNA, ARNC, ASBC, ASGN, ASHTY, ASXC, ATASY, ATHA, ATHN, ATUS, ATVI, AUY, AVB, AVLR, AVYA, AXHE, AXTE, AY, AYR, AYX, AZEK, AZPN, AZSEY, BAF, BAMXY, BBAVY, BBL, BCEL, BECN, BERY, BGCP, BGNE, BHI, BIVV, BK, BKEP, BKEPP, BKI, BPMP, BRCM, BREW, BRKB, BRKS, BRMK, BRP, BRY, BTEC, BTVCY, BXS, CADE, CADE-PA, CAJ, CATM, CBS, CCCS, CCH, CCMP, CCP, CCT, CCXI, CCXX, CDEV, CDK, CELG, CEMCF, CEMI, CEQP, CERN, CHEUY, CHK, CHL, CHUY, CHX ...
+
+Trades dropped per member (top 25) -- survivorship exposure:
+  house_susie_lee                           187 dropped /  1035 traded (18.1%)
+  house_greg_gianforte                      178 dropped /   737 traded (24.2%)
+  house_josh_gottheimer                     164 dropped /  2234 traded ( 7.3%)
+  house_gilbert_cisneros                    115 dropped /   653 traded (17.6%)
+  house_donna_shalala                        99 dropped /   428 traded (23.1%)
+  house_daniel_goldman                       90 dropped /  1140 traded ( 7.9%)
+  house_virginia_foxx                        88 dropped /   437 traded (20.1%)
+  house_tom_malinowski                       80 dropped /   319 traded (25.1%)
+  house_thomas_suozzi                        80 dropped /   679 traded (11.8%)
+  senate_thomash_tuberville                  67 dropped /   789 traded ( 8.5%)
+  house_kevin_hern                           66 dropped /   500 traded (13.2%)
+  house_christopherl_jacobs                  63 dropped /   228 traded (27.6%)
+  house_markdr_green                         62 dropped /   260 traded (23.8%)
+  senate_sheldon_whitehouse                  60 dropped /   623 traded ( 9.6%)
+  house_alans_lowenthal                      46 dropped /   418 traded (11.0%)
+  senate_thomasr_tillis                      44 dropped /   100 traded (44.0%)
+  senate_johnf_reed                          38 dropped /   190 traded (20.0%)
+  house_thomas_macarthur                     38 dropped /   305 traded (12.5%)
+  house_nicholasvan_taylor                   35 dropped /   235 traded (14.9%)
+  senate_shelleym_capito                     34 dropped /   630 traded ( 5.4%)
+  house_gary_palmer                          30 dropped /   176 traded (17.0%)
+  house_lois_frankel                         30 dropped /   549 traded ( 5.5%)
+  senate_susanm_collins                      27 dropped /   149 traded (18.1%)
+  house_davida_trott                         26 dropped /    38 traded (68.4%)
+  senate_patty_murray                        26 dropped /   161 traded (16.1%)

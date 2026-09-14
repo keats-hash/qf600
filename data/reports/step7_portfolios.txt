@@ -1,0 +1,42 @@
+==============================================================================
+STEP 7 -- PORTFOLIO RETURN SERIES (evaluation window)
+==============================================================================
+Window: 2020-01 .. 2024-12   Weighting: equal (default)   Headline: long_only
+
+group                        construction    N  mean%/yr   sd%/yr      min      max
+------------------------------------------------------------------------------
+trackA_pool_all              long_only      60     13.9%    19.3%   -16.1%    13.7%
+trackA_pool_all              long_short     60     -3.1%     5.9%    -6.6%     3.8%
+trackA_rejected              long_only      60     11.6%    19.4%   -16.8%    13.2%
+trackA_rejected              long_short     60     -4.5%     5.4%    -4.5%     3.1%
+trackA_selected              long_only      60     19.1%    20.5%   -14.6%    14.7%
+trackA_selected              long_short     60     -0.3%    11.2%   -10.7%     8.2%
+trackB_agriculture           long_only      51      9.2%    18.7%    -6.7%    19.4%
+trackB_agriculture           long_short     59     -1.3%    16.4%   -22.6%    15.2%
+trackB_armed_services        long_only      59     16.4%    29.8%   -17.5%    33.0%
+trackB_armed_services        long_short     59     -7.0%    14.1%   -16.8%     9.4%
+trackB_combined              long_only      59     11.4%    22.4%   -23.0%    20.9%
+trackB_combined              long_short     59     -2.5%     6.8%    -7.6%     3.7%
+trackB_energy_commerce       long_only      54      2.9%    37.8%   -50.2%    33.3%
+trackB_energy_commerce       long_short     59     -5.0%    20.5%   -22.7%    23.5%
+trackB_financial_services    long_only      59      0.9%    33.3%   -47.0%    17.4%
+trackB_financial_services    long_short     59     -4.2%    16.4%   -18.4%     8.8%
+trackB_health                long_only      58     16.5%    17.6%    -8.4%    16.9%
+trackB_health                long_short     58      0.1%     8.0%    -4.6%     7.7%
+trackB_science_commerce      long_only      59     21.7%    20.6%   -12.8%    14.7%
+trackB_science_commerce      long_short     59      2.1%     9.0%    -6.9%     6.4%
+trackB_transport_infra       long_only      57     21.5%    25.5%   -13.2%    18.7%
+trackB_transport_infra       long_short     58     -2.6%    24.2%   -14.1%    42.9%
+
+Coverage check -- months with no active member are simply absent, so a
+group with N < 60 was not holding anything in some evaluation months:
+  trackB_agriculture            51/60 months (9 with no open position)
+  trackB_armed_services         59/60 months (1 with no open position)
+  trackB_combined               59/60 months (1 with no open position)
+  trackB_energy_commerce        54/60 months (6 with no open position)
+  trackB_financial_services     59/60 months (1 with no open position)
+  trackB_health                 58/60 months (2 with no open position)
+  trackB_science_commerce       59/60 months (1 with no open position)
+  trackB_transport_infra        57/60 months (3 with no open position)
+
+Saved -> /Users/keatzram/Desktop/keats/QF_600/data/clean/portfolio_returns.parquet  (22 series x 60 months)

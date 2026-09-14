@@ -1,0 +1,117 @@
+====================================================================================================
+STEP 9 -- ROBUSTNESS.  ALL VARIANTS REPORTED BESIDE THE BASELINE.
+====================================================================================================
+Headline construction: long_only. Significance: * .10  ** .05  *** .01
+
+----------------------------------------------------------------------------------------------------
+1. SUBPERIOD STABILITY  (selection UNCHANGED; only the evaluation window is sliced)
+----------------------------------------------------------------------------------------------------
+  trackA_selected (long_only, CAPM):
+      full 2020-2024                             +3.49%  t= 1.34    CI[  -1.6%,  +8.6%] b= 1.03 N= 60
+      2020-2021 (COVID crash + recovery)         +0.12%  t= 0.04    CI[  -6.4%,  +6.6%] b= 0.98 N= 24
+      2022-2024 (bear then recovery)             +6.19%  t= 1.91*   CI[  -0.2%, +12.6%] b= 1.09 N= 36
+
+  trackB_combined (long_only, CAPM):
+      full 2020-2024                             -5.34%  t=-1.11    CI[ -14.8%,  +4.1%] b= 1.10 N= 59
+      2020-2021 (COVID crash + recovery)        -14.39%  t=-1.67*   CI[ -31.3%,  +2.5%] b= 1.27 N= 23
+      2022-2024 (bear then recovery)             -1.44%  t=-0.52    CI[  -6.9%,  +4.0%] b= 0.97 N= 36
+
+----------------------------------------------------------------------------------------------------
+2. ROLLING 24-MONTH CAPM ALPHA  (every window shown -- no cherry-picking)
+----------------------------------------------------------------------------------------------------
+  trackA_selected (long_only):
+    2020-01..2021-12  a=  +0.12%  t= 0.04  b= 0.98  
+    2020-07..2022-06  a=  +3.11%  t= 0.97  b= 0.99  +
+    2021-01..2022-12  a=  +3.33%  t= 1.09  b= 1.03  +
+    2021-07..2023-06  a=  +6.19%  t= 1.85  b= 1.08  +++
+    2022-01..2023-12  a=  +5.85%  t= 1.68  b= 1.06  ++
+    2022-07..2024-06  a=  +8.00%  t= 2.01  b= 1.16  +++
+    2023-01..2024-12  a=  +5.83%  t= 1.42  b= 1.18  ++
+
+  trackB_combined (long_only):
+    2020-02..2022-01  a= -13.10%  t=-1.66  b= 1.25  ------
+    2020-08..2022-07  a=  +1.27%  t= 0.28  b= 1.12  
+    2021-02..2023-01  a=  -0.34%  t=-0.11  b= 0.95  
+    2021-08..2023-07  a=  +1.34%  t= 0.51  b= 0.97  
+    2022-02..2024-01  a=  +2.06%  t= 0.69  b= 0.98  +
+    2022-08..2024-07  a=  -0.02%  t=-0.01  b= 0.92  
+    2023-01..2024-12  a=  -3.65%  t=-1.09  b= 0.97  -
+
+  trackA_selected: 37 windows, alpha range [-1.9%, +9.5%], 1 with |t|>2
+  trackB_combined: 36 windows, alpha range [-13.1%, +3.6%], 0 with |t|>2
+  Windows overlap heavily, so these t-stats are NOT independent tests --
+  the chart is for shape and stability, not for counting significances.
+
+----------------------------------------------------------------------------------------------------
+3. ERA-DUMMY INTERACTION  (one model: does alpha differ before/after 2022-01?)
+----------------------------------------------------------------------------------------------------
+   R_p - R_f = a0 + a1*D + b0*MKT + b1*(D x MKT) + e,  D = 1 after the cut
+   a1 tests the ALPHA difference; b1 tests the BETA difference.
+  trackA_selected (long_only):  N=60
+    a0 (pre-cut alpha)     +0.12%/yr  t= 0.04
+    a1 (alpha SHIFT)       +6.07%/yr  t= 1.30   p=0.193
+    b0 (pre-cut beta)       0.98     t=17.61
+    b1 (beta SHIFT)         0.11     t= 1.25   p=0.211
+    -> no detectable alpha difference across eras
+  trackB_combined (long_only):  N=59
+    a0 (pre-cut alpha)    -14.39%/yr  t=-1.67
+    a1 (alpha SHIFT)      +12.95%/yr  t= 1.43   p=0.152
+    b0 (pre-cut beta)       1.27     t=12.80
+    b1 (beta SHIFT)        -0.30     t=-2.86   p=0.004
+    -> no detectable alpha difference across eras
+  CAVEAT: regime is confounded with market conditions. Read this as market-
+  regime stability, NOT as a claim about politics.
+
+----------------------------------------------------------------------------------------------------
+4-6. WEIGHTING / ENTRY-LAG / LEG-DEDUPE VARIANTS
+----------------------------------------------------------------------------------------------------
+  trackA_selected (long_only, CAPM):
+    BASELINE equal-weight, lag 1, legs kept      +3.49%  t= 1.34    CI[  -1.6%,  +8.6%] b= 1.03 N= 60
+    midpoint-SIZE weighted                       +1.79%  t= 0.91    CI[  -2.1%,  +5.6%] b= 1.00 N= 60
+    entry lag 0 (earns filing month itself)      +4.01%  t= 1.44    CI[  -1.5%,  +9.5%] b= 1.02 N= 60
+    de-duplicated legs (1 per ticker)            +3.08%  t= 1.28    CI[  -1.6%,  +7.8%] b= 1.05 N= 60
+
+  trackB_combined (long_only, CAPM):
+    BASELINE equal-weight, lag 1, legs kept      -5.34%  t=-1.11    CI[ -14.8%,  +4.1%] b= 1.10 N= 59
+    midpoint-SIZE weighted                       -5.67%  t=-1.15    CI[ -15.3%,  +4.0%] b= 1.11 N= 59
+    entry lag 0 (earns filing month itself)      -5.34%  t=-1.11    CI[ -14.8%,  +4.1%] b= 1.10 N= 59
+    de-duplicated legs (1 per ticker)            -5.80%  t=-1.20    CI[ -15.2%,  +3.7%] b= 1.11 N= 59
+
+  Entry lag 0 is shown because it is the LESS conservative choice: it lets a
+  position earn the part of the filing month that preceded disclosure. If
+  alpha appears only at lag 0, that alpha is a look-ahead artefact.
+
+----------------------------------------------------------------------------------------------------
+7. SPLIT-BOUNDARY VARIANTS  (does the conclusion hinge on the exact date?)
+----------------------------------------------------------------------------------------------------
+   Selection is RE-RUN INSIDE each alternative split -- formation ranking on
+   that split's formation window only. The baseline split is NOT replaced.
+  BASELINE  form 2014-2019 / eval 2020-2024      +3.49%  t= 1.34    CI[  -1.6%,  +8.6%] b= 1.03 N= 60
+      pool 30 -> selected 8: ['house_bradleys_schneider', 'house_suzank_delbene', 'house_lamar_smith', 'house_katherinem_clark', 'house_alans_lowenthal', 'house_bob_gibbs', 'house_pete_sessions', 'house_dwight_evans']
+  ALT A     form 2014-2018 / eval 2019-2024      -0.77%  t=-0.12    CI[ -13.2%, +11.7%] b= 1.10 N= 32
+      pool 9 -> selected 2: ['senate_john_hoeven', 'senate_william_cassidy']
+  ALT B     form 2014-2020 / eval 2021-2024      -2.13%  t=-0.51    CI[ -10.3%,  +6.0%] b= 1.29 N= 48
+      pool 46 -> selected 12: ['house_jamesr_langevin', 'house_donaldsternoff_beyer_jr', 'house_davidcheston_rouzer', 'house_suzank_delbene', 'house_lamar_smith', 'house_bradleys_schneider', 'house_gilbert_cisneros', 'house_susie_lee', 'house_josh_gottheimer', 'house_davidp_joyce', 'house_katherinem_clark', 'senate_jerry_moran']
+
+----------------------------------------------------------------------------------------------------
+8. COMMITTEE->SECTOR MAP ROBUSTNESS  (Track B)
+----------------------------------------------------------------------------------------------------
+  BASELINE map                                   -5.37%  t=-1.12    CI[ -14.8%,  +4.1%] b= 1.10 N= 59
+      1,843 trades, 90 members
+  ec_health: Energy & Commerce -> Health Care instead of Energy/Utilities   -3.86%  t=-1.07    CI[ -11.0%,  +3.2%] b= 1.04 N= 59
+      1,945 trades, 85 members
+  no_real_estate: Financial Services -> Financials only (Real Estate dropped)   -3.64%  t=-1.01    CI[ -10.7%,  +3.5%] b= 1.06 N= 59
+      1,811 trades, 90 members
+
+  If the baseline and the variants agree, the objection 'you chose the map
+  to get the answer' is answered. If they disagree, that is reported here
+  as a genuine limitation rather than resolved by picking a favourite.
+
+====================================================================================================
+MULTIPLE-COMPARISONS WARNING
+====================================================================================================
+  This report contains many specifications. Under the null of zero alpha,
+  roughly 1 in 20 would cross the 5% threshold by chance alone. A single
+  starred cell among many nulls is therefore NOT evidence of skill. Read
+  the table for CONSISTENCY of sign and magnitude across variants, not for
+  the presence of a star somewhere in it.

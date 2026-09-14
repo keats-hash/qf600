@@ -1,0 +1,66 @@
+==============================================================================
+STEP 6 -- TRACK B SELECTION (committee oversight)
+==============================================================================
+Selection variable: COMMITTEE MEMBERSHIP ONLY. No return is consulted.
+
+1. Point-in-time committee snapshots (reconstructed from git history --
+   upstream ships only a current snapshot; see module docstring)
+
+2. Name-matching kadoa filer_id -> bioguide
+   MATCH RATE: 258/259 = 99.6%
+   Unmatched (1) -- EXCLUDED from Track B:
+     senate_a_mitchell                          A. Mitchell                best score 0
+
+   Matched but below a perfect name+state+chamber agreement (11) -- flagged for hand-verification:
+     house_astondonald_mceachin                 Aston Donald McEachin      -> M001200 (score 4/7)
+     house_davidmadison_cawthorn                David Madison Cawthorn     -> C001104 (score 4/7)
+     house_elizabeth_fletcher                   Elizabeth Fletcher         -> F000468 (score 4/7)
+     house_jamesfrench_hill                     James French Hill          -> H001072 (score 4/7)
+     house_nicholasv_taylor                     Nicholas V. Taylor         -> T000479 (score 4/7)
+     house_nicholasvan_taylor                   Nicholas Van Taylor        -> T000479 (score 4/7)
+     senate_alan_armstrong                      Alan Armstrong             -> A000383 (score 4/7)
+     senate_amitchell_mcconnelljr               A. Mitchell McConnell      -> M000355 (score 4/7)
+     senate_johnp_ricketts                      John P Ricketts            -> R000618 (score 4/7)
+     senate_laddatammy_duckworth                Ladda Tammy Duckworth      -> D000622 (score 4/7)
+     senate_rafaele_cruz                        Rafael E Cruz              -> C001098 (score 4/7)
+
+3. Resolving committee membership through the COMMITTED sector map
+   Mapped committee-member rows: 1,600
+   ... of which match a trading member: 573 (168 distinct members)
+
+   Members per committee group, by Congress:
+congress            116  117  118
+committee_key                    
+agriculture          22   22   20
+armed_services       32   41   33
+energy_commerce      22   29   25
+financial_services   24   27   25
+health               24   31   29
+science_commerce     22   29   27
+transport_infra      31   30   28
+
+4. Ticker -> GICS sector (yfinance .info, cached)
+   On-committee eval-window trades: 14,682 (1,588 distinct tickers, of which 1,308 are priced and therefore need a sector)
+   Sector vocabulary check: map names 10 sectors; 10 are present in the data
+   Sector mapped: 12,674/14,682 trade-rows (86.3%); 2,008 UNKNOWN (dropped)
+   Unmapped tickers (431): ['AAN', 'AAXJ', 'ABB', 'ABC', 'ABMD', 'ABNFX', 'ABQCX', 'ACST', 'ADS', 'AESE', 'AGAE', 'AGN', 'AGR', 'AGZ', 'AIMC', 'AKRO', 'ALLK', 'ALXN', 'AMEH', 'AMLP', 'AMWD', 'AMZA', 'ANSS', 'ANTM', 'ANZBY', 'APEN', 'APHA', 'APPAD', 'AQUA', 'ARGO', 'ARKG', 'ARKK', 'ASBC', 'ASGN', 'ATASY', 'ATHA', 'ATVI', 'AVB', 'AVLR', 'AXHE']
+
+5. Keeping only trades where committee sector == ticker sector
+   On-committee, IN-SECTOR trades: 1,843 (90 members)
+
+   Per-committee group sizes (evaluation window):
+                    trades  members  tickers
+committee_key                               
+agriculture             68       11       26
+armed_services         296       23       75
+energy_commerce         64       16       29
+financial_services     353       12       86
+health                 322       20       77
+science_commerce       463       24       73
+transport_infra        277       22       72
+
+   NOTE: samples are small by construction. Step 8 therefore reports 95%
+   confidence intervals, not just t-statistics -- a wide CI around zero is
+   honest 'underpowered', not a null result to oversell.
+
+Saved -> /Users/keatzram/Desktop/keats/QF_600/data/clean/trackB_groups.parquet

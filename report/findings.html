@@ -1,0 +1,619 @@
+<title>Congressional Trading Alpha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F6F7F9;
+    --panel:#FFFFFF;
+    --ink:#131721;
+    --muted:#626C7E;
+    --faint:#8A93A3;
+    --rule:#DCE0E7;
+    --rule-soft:#E9ECF1;
+    --accent:#2F4E6F;
+    --accent-soft:#E3EAF2;
+    --pos:#2E6B4F;
+    --neg:#A8432F;
+    --warn:#8A6A1F;
+    --shadow:0 1px 2px rgba(19,23,33,.06),0 8px 24px rgba(19,23,33,.05);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0E1116;
+      --panel:#151A22;
+      --ink:#E6E9EF;
+      --muted:#98A1B1;
+      --faint:#7A8394;
+      --rule:#262C38;
+      --rule-soft:#1D232C;
+      --accent:#8DB0D6;
+      --accent-soft:#1C2836;
+      --pos:#6FAE88;
+      --neg:#D4795F;
+      --warn:#C2A054;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1116;
+    --panel:#151A22;
+    --ink:#E6E9EF;
+    --muted:#98A1B1;
+    --faint:#7A8394;
+    --rule:#262C38;
+    --rule-soft:#1D232C;
+    --accent:#8DB0D6;
+    --accent-soft:#1C2836;
+    --pos:#6FAE88;
+    --neg:#D4795F;
+    --warn:#C2A054;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Spectral",Georgia,"Times New Roman",serif;
+    font-size:17px;
+    line-height:1.62;
+    margin:0;
+    padding-block:0 72px;
+    padding-left:20px;
+    padding-right:20px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto}
+  .measure{max-width:68ch}
+
+  /* ---------- masthead ---------- */
+  header.masthead{
+    border-bottom:2px solid var(--ink);
+    padding-block:48px 20px;
+    margin-bottom:36px;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 18px;
+  }
+  h1{
+    font-size:clamp(30px,5.2vw,46px);
+    line-height:1.12;
+    font-weight:600;
+    letter-spacing:-.015em;
+    margin:0 0 14px;
+    text-wrap:balance;
+  }
+  .standfirst{
+    font-size:19px;
+    color:var(--muted);
+    margin:0;
+    max-width:60ch;
+    font-weight:300;
+  }
+  .byline{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px;
+    color:var(--faint);
+    margin-top:22px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 18px;
+  }
+
+  /* ---------- verdict ---------- */
+  .verdict{
+    background:var(--panel);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--accent);
+    box-shadow:var(--shadow);
+    padding:26px 28px;
+    margin-bottom:40px;
+  }
+  .verdict h2{
+    font-size:12px;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 12px;
+    font-weight:600;
+  }
+  .verdict p{margin:0 0 14px;font-size:18px}
+  .verdict p:last-child{margin-bottom:0}
+
+  .headline-pair{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+    margin:22px 0 0;
+  }
+  .hstat{background:var(--panel);padding:18px 20px}
+  .hstat .lbl{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);display:block;margin-bottom:8px;
+  }
+  .hstat .val{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:27px;font-weight:500;letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;display:block;line-height:1.1;
+  }
+  .hstat .sub{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px;color:var(--muted);display:block;margin-top:7px;
+    font-variant-numeric:tabular-nums;
+  }
+  .ns{color:var(--muted)}
+
+  /* ---------- sections ---------- */
+  section{margin-bottom:52px}
+  h2.sec{
+    font-size:13px;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:600;
+    margin:0 0 6px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--rule);
+  }
+  h3{
+    font-size:23px;font-weight:600;letter-spacing:-.01em;
+    margin:30px 0 10px;text-wrap:balance;
+  }
+  h4{
+    font-size:17px;font-weight:600;margin:26px 0 8px;
+  }
+  p{margin:0 0 16px}
+  .lede{font-size:18.5px;color:var(--muted);font-weight:300;margin-bottom:24px}
+
+  /* ---------- tables ---------- */
+  .tablewrap{overflow-x:auto;margin:22px 0;border:1px solid var(--rule);background:var(--panel)}
+  table{border-collapse:collapse;width:100%;min-width:560px}
+  caption{
+    caption-side:top;text-align:left;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);padding:14px 16px 10px;border-bottom:1px solid var(--rule-soft);
+  }
+  th,td{
+    padding:9px 14px;text-align:right;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:13px;font-variant-numeric:tabular-nums;
+    border-bottom:1px solid var(--rule-soft);
+  }
+  th{
+    font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--muted);font-weight:500;white-space:nowrap;
+    border-bottom:1px solid var(--rule);
+  }
+  th:first-child,td:first-child{text-align:left}
+  tbody tr:last-child td{border-bottom:none}
+  tr.hl td{background:var(--accent-soft)}
+  td.pos{color:var(--pos)}
+  td.neg{color:var(--neg)}
+  .star{color:var(--warn);font-weight:600}
+  td.name{font-family:"Spectral",Georgia,serif;font-size:15px}
+
+  /* ---------- CI chart ---------- */
+  figure{margin:26px 0;background:var(--panel);border:1px solid var(--rule);padding:20px 16px 12px}
+  figcaption{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:16px;
+  }
+  .ci-note{font-size:14.5px;color:var(--muted);margin:14px 4px 0;font-style:italic}
+  svg{display:block;width:100%;height:auto;max-width:100%}
+  .ax{stroke:var(--rule);stroke-width:1}
+  .zero{stroke:var(--ink);stroke-width:1.25}
+  .tick{fill:var(--faint);font-family:"IBM Plex Mono",monospace;font-size:9.5px}
+  .rlab{fill:var(--ink);font-family:"IBM Plex Mono",monospace;font-size:10px}
+  .bar{stroke:var(--accent);stroke-width:5;stroke-linecap:butt;opacity:.34}
+  .barhl{stroke:var(--accent);stroke-width:7;opacity:.5}
+  .cap{stroke:var(--accent);stroke-width:1.25;opacity:.75}
+  .dot{fill:var(--accent)}
+  .dothl{fill:var(--accent);stroke:var(--panel);stroke-width:1.5}
+
+  /* ---------- callouts ---------- */
+  .note{
+    border-left:2px solid var(--rule);
+    padding:2px 0 2px 20px;
+    margin:22px 0;
+    color:var(--muted);
+    font-size:16px;
+  }
+  .flag{
+    background:var(--panel);
+    border:1px solid var(--rule);
+    border-top:2px solid var(--warn);
+    padding:20px 22px;margin:24px 0;box-shadow:var(--shadow);
+  }
+  .flag .tag{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--warn);font-weight:600;display:block;margin-bottom:9px;
+  }
+  .flag p{margin:0 0 12px;font-size:16px}
+  .flag p:last-child{margin:0}
+
+  ul,ol{margin:0 0 16px;padding-left:22px}
+  li{margin-bottom:9px}
+  li::marker{color:var(--faint)}
+  strong{font-weight:600}
+  code{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.87em;background:var(--rule-soft);
+    padding:1px 5px;border-radius:2px;
+  }
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+  /* ---------- guardrails ---------- */
+  .rails{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:24px 0}
+  .rail{background:var(--panel);padding:20px}
+  .rail .n{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10.5px;color:var(--accent);letter-spacing:.1em;
+    display:block;margin-bottom:8px;font-weight:600;
+  }
+  .rail h4{margin:0 0 7px;font-size:16px}
+  .rail p{margin:0;font-size:14.5px;color:var(--muted);line-height:1.55}
+
+  footer{
+    border-top:1px solid var(--rule);
+    padding-top:24px;margin-top:56px;
+    font-size:14px;color:var(--faint);
+  }
+  footer p{margin:0 0 8px}
+  @media (max-width:520px){
+    body{font-size:16px;padding-left:16px;padding-right:16px}
+    .verdict{padding:20px 18px}
+  }
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">QF600 · Asset Pricing · Empirical Study</p>
+  <h1>Do Congressional Traders Generate Risk-Adjusted Alpha?</h1>
+  <p class="standfirst">Two independent selection hypotheses, tested out-of-sample on 33,522 disclosed trades. Neither survives the market factor.</p>
+  <div class="byline">
+    <span>Evaluation window 2020-01 → 2024-12</span>
+    <span>N = 60 months</span>
+    <span>CAPM &amp; Carhart 4-factor, Newey–West HAC</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <h2>Finding</h2>
+  <p><strong>No detectable risk-adjusted alpha in either track.</strong> Members selected for past trading performance earned <span class="mono">+3.49%</span>/yr of CAPM alpha out-of-sample, but the estimate is statistically indistinguishable from zero and its sign reverses under alternative split dates. Members selected for committee oversight, tested only in the sectors they oversee, earned <span class="mono">−5.34%</span>/yr — also indistinguishable from zero.</p>
+  <p>Both portfolios load on the market at <span class="mono">β ≈ 1</span> and the market explains <span class="mono">87–90%</span> of their variance. What looks like stock-picking is, to the precision this data supports, market exposure.</p>
+
+  <div class="headline-pair">
+    <div class="hstat">
+      <span class="lbl">Track A — performance selection</span>
+      <span class="val">+3.49<span style="font-size:17px">%/yr</span></span>
+      <span class="sub ns">t = 1.34 · 95% CI [−1.6%, +8.6%]<br>β = 1.03 · R² = 0.90 · N = 60</span>
+    </div>
+    <div class="hstat">
+      <span class="lbl">Track B — committee oversight</span>
+      <span class="val">−5.34<span style="font-size:17px">%/yr</span></span>
+      <span class="sub ns">t = −1.11 · 95% CI [−14.8%, +4.1%]<br>β = 1.10 · R² = 0.87 · N = 59</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <h2 class="sec">The question</h2>
+  <p class="lede measure">Members of Congress must disclose their personal stock trades. Do any of them beat the market once you strip out the market itself?</p>
+  <div class="measure">
+    <p>The interesting question is not whether some member's portfolio went up — in 2020–2024 almost everything went up. It is whether any group earned a return the market factor cannot explain. That is what α measures, and separating it from β is the entire exercise.</p>
+    <p>Two groups are worth testing, for different reasons, and both are tested the same way — selection in one window, evaluation in a later, non-overlapping one:</p>
+    <ul>
+      <li><strong>Track A — performance selection.</strong> Rank members on trading performance in a formation window (2014–2019), then test the top quartile in 2020–2024. This asks whether past winners <em>persist</em>, which is the difference between skill and luck.</li>
+      <li><strong>Track B — committee oversight.</strong> Select members by an <em>ex-ante</em> characteristic — which committee they sat on — and test them only in the sectors that committee regulates. Selection never touches returns at all, so this group cannot have been chosen for being lucky.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec">How the test avoids fooling itself</h2>
+  <p class="measure lede">Four rules, enforced by assertions in code rather than by good intentions.</p>
+
+  <div class="rails">
+    <div class="rail">
+      <span class="n">RULE 01</span>
+      <h4>Enter on the disclosure date</h4>
+      <p>Filings lag the trade by a median of 29 days — and 438 days at the 95th percentile. Entering on the trade date would credit the portfolio with a price move that was neither public nor investable. This is the single largest look-ahead trap in this literature.</p>
+    </div>
+    <div class="rail">
+      <span class="n">RULE 02</span>
+      <h4>Quarantine selection from evaluation</h4>
+      <p>Track A ranks on formation months only; a hard assertion fails the run if an evaluation month leaks in. The validation suite independently re-derives the selected group from formation data alone and confirms it reproduces exactly.</p>
+    </div>
+    <div class="rail">
+      <span class="n">RULE 03</span>
+      <h4>Make the exit carry no information</h4>
+      <p>Positions exit exactly 12 months after entry — a fixed function of the entry date, so it cannot encode what the price did next. Holding until a disclosed closing trade was rejected: those are filed sparsely and late, which would make the exit date itself an informed choice.</p>
+    </div>
+    <div class="rail">
+      <span class="n">RULE 04</span>
+      <h4>Report every variant</h4>
+      <p>Run enough specifications and one crosses t = 2 by chance. The defence is not fewer specifications — it is showing all 44 of them, so a starred cell can be read against the nulls surrounding it.</p>
+    </div>
+  </div>
+
+  <div class="note measure">
+    <p style="margin:0"><strong>One deliberately conservative choice.</strong> A filing lands mid-month, so crediting that whole month's return would capture the part that preceded disclosure. Positions therefore earn from the <em>following</em> month. This can only reduce measured alpha, never inflate it — and the zero-lag variant is reported anyway, because if alpha appeared only there, it would be an artefact.</p>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec">Track A — does past performance persist?</h2>
+  <div class="measure">
+    <p>Of 259 members with disclosed trades, 30 cleared the pre-committed eligibility floor: at least 10 trades and 12 invested months during the formation window. Ranking those 30 on formation-period return and taking the top quartile selects <strong>8 members</strong> — 5 Democrats, 3 Republicans, all House.</p>
+    <p>In formation, this group returned <span class="mono">23.9%</span>/yr against <span class="mono">8.2%</span>/yr for the pool they were drawn from. That gap is not evidence of anything: it <em>is</em> the selection. The question is what happened next.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Track A — evaluation window 2020–2024, equal-weighted</caption>
+      <thead>
+        <tr><th>Group / construction</th><th>Model</th><th>α %/yr</th><th>t</th><th>95% CI</th><th>β</th><th>R²</th><th>N</th></tr>
+      </thead>
+      <tbody>
+        <tr class="hl"><td class="name">Selected — long-only</td><td>CAPM</td><td class="pos">+3.49</td><td>1.34</td><td>[−1.6, +8.6]</td><td>1.03</td><td>0.90</td><td>60</td></tr>
+        <tr><td class="name">Selected — long-only</td><td>FF4</td><td class="pos">+3.42</td><td>1.56</td><td>[−0.9, +7.7]</td><td>1.03</td><td>0.90</td><td>60</td></tr>
+        <tr><td class="name">Selected — long–short</td><td>CAPM</td><td class="neg">−0.40</td><td>−0.09</td><td>[−8.8, +8.0]</td><td>−0.18</td><td>0.09</td><td>60</td></tr>
+        <tr><td class="name">Eligible pool (all 30)</td><td>CAPM</td><td class="neg">−1.30</td><td>−0.60</td><td>[−5.5, +2.9]</td><td>1.00</td><td>0.95</td><td>60</td></tr>
+        <tr><td class="name">Rejected members (control)</td><td>CAPM</td><td class="neg">−3.38</td><td>−1.26</td><td>[−8.6, +1.9]</td><td>0.99</td><td>0.92</td><td>60</td></tr>
+        <tr><td class="name">Rejected — long–short</td><td>CAPM</td><td class="neg">−5.40</td><td>−2.60<span class="star">***</span></td><td>[−9.5, −1.3]</td><td>−0.11</td><td>0.15</td><td>60</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="measure">
+    <p>The selected group's alpha is positive but its confidence interval comfortably contains zero. The honest reading is <strong>underpowered</strong>, not <em>proven absent</em>: with 60 monthly observations, this test could only have detected a very large effect.</p>
+    <p>Two details matter more than the headline. First, the <strong>control group works</strong> — the members the ranking rejected did no better, and their long–short leg is reliably negative. Second, and decisively: under alternative split dates the selected group's alpha <strong>changes sign</strong>. A real effect does not do that.</p>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec">Track B — does oversight confer an edge?</h2>
+  <div class="measure">
+    <p>Committee membership was reconstructed point-in-time for the 116th, 117th and 118th Congresses, then joined to trading members by name (<strong>99.6%</strong> matched, 258 of 259). Each member's trades were restricted to the GICS sectors their committee actually oversees, using a sector map fixed in advance with a written oversight rationale for every row.</p>
+    <p>That leaves 1,843 in-sector trades across 90 members. Samples are small by construction, so these results are reported with confidence intervals rather than t-statistics alone.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Track B — on-committee, in-sector · long-only CAPM · 2020–2024</caption>
+      <thead>
+        <tr><th>Committee group</th><th>Sectors tested</th><th>Trades</th><th>α %/yr</th><th>t</th><th>95% CI</th><th>β</th></tr>
+      </thead>
+      <tbody>
+        <tr class="hl"><td class="name">Combined</td><td style="text-align:left">all mapped</td><td>1,843</td><td class="neg">−5.34</td><td>−1.11</td><td>[−14.8, +4.1]</td><td>1.10</td></tr>
+        <tr><td class="name">Science / Commerce</td><td style="text-align:left">Info Tech, Comm Svcs</td><td>463</td><td class="pos">+6.33</td><td>1.80<span class="star">*</span></td><td>[−0.6, +13.2]</td><td>0.99</td></tr>
+        <tr><td class="name">Health</td><td style="text-align:left">Health Care</td><td>322</td><td class="pos">+3.10</td><td>0.76</td><td>[−4.9, +11.1]</td><td>0.74</td></tr>
+        <tr><td class="name">Agriculture</td><td style="text-align:left">Consumer Staples</td><td>68</td><td class="neg">−0.68</td><td>−0.09</td><td>[−15.4, +14.0]</td><td>0.56</td></tr>
+        <tr><td class="name">Transportation / Infra.</td><td style="text-align:left">Industrials, Materials</td><td>277</td><td class="neg">−1.40</td><td>−0.28</td><td>[−11.3, +8.5]</td><td>1.14</td></tr>
+        <tr><td class="name">Armed Services</td><td style="text-align:left">Industrials</td><td>296</td><td class="neg">−2.11</td><td>−0.31</td><td>[−15.2, +11.0]</td><td>1.24</td></tr>
+        <tr><td class="name">Energy &amp; Commerce</td><td style="text-align:left">Energy, Utilities</td><td>64</td><td class="neg">−17.03</td><td>−0.96</td><td>[−51.9, +17.8]</td><td>1.26</td></tr>
+        <tr><td class="name">Financial Services</td><td style="text-align:left">Financials, Real Estate</td><td>353</td><td class="neg">−19.66</td><td>−1.40</td><td>[−47.2, +7.9]</td><td>1.40</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="measure">Not one committee group clears significance under CAPM. The one cell in the entire study that crosses the 5% threshold positively is Science/Commerce under the 4-factor model (<span class="mono">+6.78%</span>, t = 2.16) — discussed below, where it belongs.</p>
+</section>
+
+<section>
+  <h2 class="sec">Every estimate, drawn to scale</h2>
+  <p class="measure">Significance stars compress a distribution into a boolean. The intervals themselves are more informative — and what they mostly show is how little this sample can resolve.</p>
+
+  <figure>
+    <figcaption>CAPM α, annualised · point estimate with 95% confidence interval</figcaption>
+    <svg viewBox="0 0 700 356" role="img" aria-label="Confidence intervals for annualised CAPM alpha across all tested groups. Every interval crosses zero.">
+      <!-- gridlines + ticks -->
+      <line class="ax" x1="185.3" y1="26" x2="185.3" y2="312"/>
+      <line class="ax" x1="256.0" y1="26" x2="256.0" y2="312"/>
+      <line class="ax" x1="326.7" y1="26" x2="326.7" y2="312"/>
+      <line class="ax" x1="397.3" y1="26" x2="397.3" y2="312"/>
+      <line class="ax" x1="468.0" y1="26" x2="468.0" y2="312"/>
+      <line class="ax" x1="609.3" y1="26" x2="609.3" y2="312"/>
+      <line class="ax" x1="680.0" y1="26" x2="680.0" y2="312"/>
+      <line class="zero" x1="538.7" y1="20" x2="538.7" y2="318"/>
+
+      <text class="tick" x="185.3" y="334" text-anchor="middle">−50%</text>
+      <text class="tick" x="256.0" y="334" text-anchor="middle">−40%</text>
+      <text class="tick" x="326.7" y="334" text-anchor="middle">−30%</text>
+      <text class="tick" x="397.3" y="334" text-anchor="middle">−20%</text>
+      <text class="tick" x="468.0" y="334" text-anchor="middle">−10%</text>
+      <text class="tick" x="538.7" y="334" text-anchor="middle">0</text>
+      <text class="tick" x="609.3" y="334" text-anchor="middle">+10%</text>
+      <text class="tick" x="680.0" y="334" text-anchor="middle">+20%</text>
+      <text class="tick" x="538.7" y="350" text-anchor="middle" style="font-size:9px">annualised alpha</text>
+
+      <!-- Track A selected (highlighted) -->
+      <text class="rlab" x="144" y="44" text-anchor="end" style="font-weight:600">A · selected</text>
+      <line class="barhl" x1="527.4" y1="40" x2="599.4" y2="40"/>
+      <line class="cap" x1="527.4" y1="34" x2="527.4" y2="46"/>
+      <line class="cap" x1="599.4" y1="34" x2="599.4" y2="46"/>
+      <circle class="dothl" cx="563.4" cy="40" r="4.5"/>
+
+      <text class="rlab" x="144" y="70" text-anchor="end">A · selected FF4</text>
+      <line class="bar" x1="532.3" y1="66" x2="593.1" y2="66"/>
+      <line class="cap" x1="532.3" y1="61" x2="532.3" y2="71"/>
+      <line class="cap" x1="593.1" y1="61" x2="593.1" y2="71"/>
+      <circle class="dot" cx="562.9" cy="66" r="3.6"/>
+
+      <text class="rlab" x="144" y="96" text-anchor="end">A · long–short</text>
+      <line class="bar" x1="476.5" y1="92" x2="595.2" y2="92"/>
+      <line class="cap" x1="476.5" y1="87" x2="476.5" y2="97"/>
+      <line class="cap" x1="595.2" y1="87" x2="595.2" y2="97"/>
+      <circle class="dot" cx="535.8" cy="92" r="3.6"/>
+
+      <!-- Track B combined (highlighted) -->
+      <text class="rlab" x="144" y="122" text-anchor="end" style="font-weight:600">B · combined</text>
+      <line class="barhl" x1="434.1" y1="118" x2="567.6" y2="118"/>
+      <line class="cap" x1="434.1" y1="112" x2="434.1" y2="124"/>
+      <line class="cap" x1="567.6" y1="112" x2="567.6" y2="124"/>
+      <circle class="dothl" cx="500.9" cy="118" r="4.5"/>
+
+      <text class="rlab" x="144" y="148" text-anchor="end">B · science/comm</text>
+      <line class="bar" x1="534.4" y1="144" x2="632.0" y2="144"/>
+      <line class="cap" x1="534.4" y1="139" x2="534.4" y2="149"/>
+      <line class="cap" x1="632.0" y1="139" x2="632.0" y2="149"/>
+      <circle class="dot" cx="583.4" cy="144" r="3.6"/>
+
+      <text class="rlab" x="144" y="174" text-anchor="end">B · health</text>
+      <line class="bar" x1="504.0" y1="170" x2="617.1" y2="170"/>
+      <line class="cap" x1="504.0" y1="165" x2="504.0" y2="175"/>
+      <line class="cap" x1="617.1" y1="165" x2="617.1" y2="175"/>
+      <circle class="dot" cx="560.6" cy="170" r="3.6"/>
+
+      <text class="rlab" x="144" y="200" text-anchor="end">B · agriculture</text>
+      <line class="bar" x1="429.8" y1="196" x2="637.6" y2="196"/>
+      <line class="cap" x1="429.8" y1="191" x2="429.8" y2="201"/>
+      <line class="cap" x1="637.6" y1="191" x2="637.6" y2="201"/>
+      <circle class="dot" cx="533.8" cy="196" r="3.6"/>
+
+      <text class="rlab" x="144" y="226" text-anchor="end">B · transport</text>
+      <line class="bar" x1="458.8" y1="222" x2="598.7" y2="222"/>
+      <line class="cap" x1="458.8" y1="217" x2="458.8" y2="227"/>
+      <line class="cap" x1="598.7" y1="217" x2="598.7" y2="227"/>
+      <circle class="dot" cx="528.8" cy="222" r="3.6"/>
+
+      <text class="rlab" x="144" y="252" text-anchor="end">B · armed svcs</text>
+      <line class="bar" x1="431.2" y1="248" x2="616.4" y2="248"/>
+      <line class="cap" x1="431.2" y1="243" x2="431.2" y2="253"/>
+      <line class="cap" x1="616.4" y1="243" x2="616.4" y2="253"/>
+      <circle class="dot" cx="523.7" cy="248" r="3.6"/>
+
+      <text class="rlab" x="144" y="278" text-anchor="end">B · energy/comm</text>
+      <line class="bar" x1="171.9" y1="274" x2="664.5" y2="274"/>
+      <line class="cap" x1="171.9" y1="269" x2="171.9" y2="279"/>
+      <line class="cap" x1="664.5" y1="269" x2="664.5" y2="279"/>
+      <circle class="dot" cx="418.3" cy="274" r="3.6"/>
+
+      <text class="rlab" x="144" y="304" text-anchor="end">B · financials</text>
+      <line class="bar" x1="205.1" y1="300" x2="594.5" y2="300"/>
+      <line class="cap" x1="205.1" y1="295" x2="205.1" y2="305"/>
+      <line class="cap" x1="594.5" y1="295" x2="594.5" y2="305"/>
+      <circle class="dot" cx="399.7" cy="300" r="3.6"/>
+    </svg>
+    <p class="ci-note">Every interval crosses zero. The two widest — Energy &amp; Commerce and Financial Services — span nearly 70 and 55 percentage points respectively, on 64 and 353 trades. Those are not findings; they are the absence of a measurement.</p>
+  </figure>
+</section>
+
+<section>
+  <h2 class="sec">Robustness</h2>
+  <p class="measure">The baseline is reported beside every variant, never alone. Nothing was re-tuned after seeing a result.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Track A selected — CAPM α under alternative specifications</caption>
+      <thead><tr><th>Specification</th><th>α %/yr</th><th>t</th><th>95% CI</th><th>β</th><th>N</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td class="name">Baseline — equal-weight, 1-month lag</td><td class="pos">+3.49</td><td>1.34</td><td>[−1.6, +8.6]</td><td>1.03</td><td>60</td></tr>
+        <tr><td class="name">Midpoint-size weighted</td><td class="pos">+1.79</td><td>0.91</td><td>[−2.1, +5.6]</td><td>1.00</td><td>60</td></tr>
+        <tr><td class="name">Zero entry lag (less conservative)</td><td class="pos">+4.01</td><td>1.44</td><td>[−1.5, +9.5]</td><td>1.02</td><td>60</td></tr>
+        <tr><td class="name">De-duplicated legs</td><td class="pos">+3.08</td><td>1.28</td><td>[−1.6, +7.8]</td><td>1.05</td><td>60</td></tr>
+        <tr><td class="name">Split A — form 14–18 / eval 19–24</td><td class="neg">−0.77</td><td>−0.12</td><td>[−13.2, +11.7]</td><td>1.10</td><td>32</td></tr>
+        <tr><td class="name">Split B — form 14–20 / eval 21–24</td><td class="neg">−2.13</td><td>−0.51</td><td>[−10.3, +6.0]</td><td>1.29</td><td>48</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="measure"><strong>The split-boundary rows are the most informative in the study.</strong> Re-running the entire selection under two other defensible split dates flips the sign to −0.77% and −2.13%. The baseline's positive alpha is not a stable property of these members; it is a property of where the window was cut.</p>
+
+  <h4>Subperiod stability — selection held fixed</h4>
+  <div class="tablewrap">
+    <table>
+      <caption>Same 8 members throughout · only the evaluation window is sliced</caption>
+      <thead><tr><th>Era</th><th>Track A α</th><th>t</th><th>Track B α</th><th>t</th></tr></thead>
+      <tbody>
+        <tr><td class="name">Full 2020–2024</td><td class="pos">+3.49</td><td>1.34</td><td class="neg">−5.34</td><td>−1.11</td></tr>
+        <tr><td class="name">2020–2021 — COVID crash &amp; recovery</td><td class="pos">+0.12</td><td>0.04</td><td class="neg">−14.39</td><td>−1.67<span class="star">*</span></td></tr>
+        <tr><td class="name">2022–2024 — bear then recovery</td><td class="pos">+6.19</td><td>1.91<span class="star">*</span></td><td class="neg">−1.44</td><td>−0.52</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="measure">A formal era-interaction model puts the alpha shift at <span class="mono">+6.07%</span>/yr with <span class="mono">p = 0.19</span> — not detectable. For Track B the <em>beta</em> shift is significant (<span class="mono">p = 0.004</span>) while the alpha shift is not, which is the general pattern: what changes across eras is market exposure, not skill.</p>
+
+  <div class="note measure">
+    <p style="margin:0">Political regime is confounded with market conditions here — the COVID crash, the 2022 bear market. This is a question about stability across market regimes, and it should not be reported as a partisan claim.</p>
+  </div>
+
+  <h4>Committee-map robustness</h4>
+  <p class="measure">The committee→sector map is author-defined, so the obvious objection is that it was chosen to produce the answer. Re-running with the two most debatable assignments varied moves the combined estimate from <span class="mono">−5.37%</span> to <span class="mono">−3.86%</span> (Energy &amp; Commerce reassigned to Health Care) and <span class="mono">−3.64%</span> (Real Estate dropped from Financial Services). All three remain insignificant. The conclusion survives the map.</p>
+</section>
+
+<section>
+  <h2 class="sec">The one significant positive result</h2>
+  <div class="flag">
+    <span class="tag">Read this before quoting the Science/Commerce number</span>
+    <p>Across the main table, <strong>44 specifications</strong> were estimated. Three cross the 5% threshold. Under the null of zero alpha everywhere, <strong>about 2.2 would be expected to do so by chance.</strong></p>
+    <p>Two of the three are <em>negative</em> (the rejected-members control group). The single positive one — Science/Commerce under the 4-factor model, <span class="mono">+6.78%</span>/yr, t = 2.16 — does not survive its own CAPM specification (t = 1.80), rests on 463 trades by 24 members, and is exactly the kind of isolated cell this count predicts.</p>
+    <p>It is reported because every result is reported. It should not be read as evidence that the Science and Commerce committees confer a tradeable information advantage.</p>
+  </div>
+
+  <p class="measure">The rolling 24-month analysis tells the same story from another angle: across 37 overlapping windows for Track A, alpha stays in a <span class="mono">−1.9%</span> to <span class="mono">+9.5%</span> band and exactly one window reaches |t| &gt; 2. Because the windows overlap heavily, those are not independent tests — the series is useful for shape, not for counting significances.</p>
+</section>
+
+<section>
+  <h2 class="sec">What the long–short leg shows</h2>
+  <p class="measure">Treating disclosed sales as short positions collapses market exposure almost exactly as theory predicts — Track A's β falls from <span class="mono">1.03</span> to <span class="mono">−0.18</span>, Armed Services from <span class="mono">1.24</span> to <span class="mono">−0.01</span>. The hedge works.</p>
+  <p class="measure">But alpha does not survive the hedge. Track A's long–short alpha is <span class="mono">−0.40%</span>/yr (t = −0.09). Once market exposure is removed, essentially nothing remains. That is the cleanest statement the data supports: <strong>these portfolios were long the market, and the market was what paid them.</strong></p>
+</section>
+
+<section>
+  <h2 class="sec">Limitations</h2>
+  <div class="measure">
+    <ul>
+      <li><strong>Statistical power is the binding constraint.</strong> Sixty monthly observations and eight selected members cannot resolve a plausible alpha of 2–3%/yr. Most results here are better described as underpowered than as null.</li>
+      <li><strong>Delisting bias, and it is not neutral.</strong> 617 traded tickers have no retrievable price history — 10.5% of in-span trades. Most were acquired or taken private, including names liquid throughout 2020–2024 whose history the price source no longer serves. Acquisition targets typically jump on announcement, so this most likely <em>understates</em> returns.</li>
+      <li><strong>Disclosed amounts are ranges,</strong> so size-weighting relies on noisy midpoints. Equal-weighting is the default for that reason.</li>
+      <li><strong>Sector labels are GICS-like, not licensed GICS,</strong> and reflect a current snapshot — a company reclassified since 2020 carries today's label.</li>
+      <li><strong>The committee→sector map is author-defined.</strong> There is no dataset for it. Every row carries a written oversight rationale, and the map-robustness variants above exist precisely because this is a judgement call.</li>
+      <li><strong>Broad committees resist clean mapping.</strong> Energy &amp; Commerce alone touches energy, health and communications; its 64 in-sector trades yield a 70-point confidence interval.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec">Three things the build surfaced</h2>
+  <div class="measure">
+    <p>Each of these would have silently corrupted the result, and each is the kind of failure that leaves a pipeline still appearing to run correctly.</p>
+    <ol>
+      <li><strong>A sector-taxonomy mismatch nearly deleted two committee groups.</strong> The price source reports "Financial Services" and "Healthcare"; the sector map is written in GICS terms — "Financials", "Health Care". Five of ten sectors never matched, and the health and agriculture groups vanished entirely while everything still ran. A translation layer and a vocabulary assertion now make this class of failure loud.</li>
+      <li><strong>Point-in-time committee data does not exist upstream.</strong> The legislators dataset ships only a <em>current</em> membership snapshot, which would have tested 2020 trades against 2025 committee seats and dropped everyone who has since left Congress. Historical membership was reconstructed by pinning the file's git history to a commit inside each Congress.</li>
+      <li><strong>The eligibility floor excludes a specific cohort, for a good reason.</strong> Several high-volume traders show zero formation invested months — they are largely the January 2019 freshman class, whose trades cluster at the very end of the formation window. High trade counts do not give them a formation track record, and ranking them would score them on a few months of noise.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec">Conclusion</h2>
+  <p class="lede measure">Neither selecting congressional traders on past performance nor selecting them on committee oversight produced detectable risk-adjusted alpha out-of-sample.</p>
+  <div class="measure">
+    <p>Track A's positive point estimate is not significant, reverses sign under alternative split dates, and disappears entirely once market exposure is hedged out. Track B is negative throughout and survives every variation of the sector map. The single significant positive cell in 44 specifications is what a multiple-comparisons count predicts.</p>
+    <p>The correct conclusion is not "members of Congress have no skill" — this design lacks the power to establish that. It is narrower and more defensible: <strong>on disclosed trades, entered when the public could actually have entered them, there is no evidence of returns the market factor cannot explain.</strong> The information advantage, if it exists, does not survive the disclosure lag.</p>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Data.</strong> 68,167 disclosures → 33,522 trades after filtering (congress only, common stock, directional transactions, priced, valid dates). 259 members, 2,075 priced tickers. Committee data from @unitedstates/congress-legislators; factors from the Ken French Data Library; prices from Yahoo Finance, monthly adjusted close.</p>
+  <p><strong>Method.</strong> CAPM and Carhart 4-factor regressions on monthly excess returns, Newey–West HAC standard errors at 6 lags to account for the overlapping 12-month holding windows. α annualised ×12. Significance: <span class="star">*</span> 0.10 · <span class="star">**</span> 0.05 · <span class="star">***</span> 0.01.</p>
+  <p><strong>Reproducibility.</strong> Full pipeline in nine independently runnable modules; <code>run_all.py</code> regenerates every figure here from raw data. <code>src/validate.py</code> asserts 15 anti-bias invariants, including an independent re-derivation of the selected group from formation data alone.</p>
+</footer>
+
+</div>
