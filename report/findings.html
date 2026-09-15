@@ -277,6 +277,57 @@
     body{font-size:16px;padding-left:16px;padding-right:16px}
     .verdict{padding:20px 18px}
   }
+
+  /* ---------- charts ----------
+     Diverging pair is blue<->red with a neutral ground. Green/red was rejected:
+     it measures dE 6.4 under protanopia, below the 8 threshold, so red-green
+     viewers could not separate gains from losses. Blue/red clears every CVD
+     check in both themes (protan 19.6 light / 18.3 dark). Bar DIRECTION also
+     encodes sign, so colour is never the sole carrier. */
+  .viz{
+    --pos:#2A6FB0;
+    --neg:#B4432E;
+    --grid:#E4E8EE;
+    --axis:#C3CAD4;
+    --band:#F0F2F6;
+    position:relative;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .viz{
+      --pos:#6FA3D8; --neg:#D4735C; --grid:#232A35; --axis:#333C4A; --band:#1A202A;
+    }
+  }
+  :root[data-theme="dark"] .viz{
+    --pos:#6FA3D8; --neg:#D4735C; --grid:#232A35; --axis:#333C4A; --band:#1A202A;
+  }
+  .chart-scroll{overflow-x:auto}
+  .viz svg{display:block;width:100%;min-width:480px;height:auto}
+  .vx{fill:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:10px}
+  .vlab{fill:var(--ink);font-family:"IBM Plex Mono",monospace;font-size:10.5px}
+  .vval{fill:var(--ink);font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:500}
+  .vgrid{stroke:var(--grid);stroke-width:1}
+  .vaxis{stroke:var(--axis);stroke-width:1.25}
+  .vbar{rx:2;cursor:pointer}
+  .vbar:hover{opacity:.78}
+  .vtitle{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 4px;
+  }
+  .vsub{font-size:14.5px;color:var(--muted);margin:0 0 14px;font-style:italic}
+  .vtip{
+    position:absolute;pointer-events:none;opacity:0;transition:opacity .12s;
+    background:var(--ink);color:var(--paper);
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+    padding:6px 9px;border-radius:3px;white-space:nowrap;z-index:5;
+    transform:translate(-50%,-125%);
+  }
+  .vkey{
+    display:flex;gap:18px;flex-wrap:wrap;margin:10px 0 0;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);
+  }
+  .vkey span{display:flex;align-items:center;gap:6px}
+  .vkey i{width:11px;height:11px;border-radius:2px;display:inline-block}
+  @media (prefers-reduced-motion:reduce){.vtip{transition:none}}
 </style>
 
 <div class="wrap">
@@ -574,6 +625,192 @@
   <p class="measure">Treating disclosed sales as short positions collapses market exposure almost exactly as theory predicts — Track A's β falls from <span class="mono">1.03</span> to <span class="mono">−0.18</span>, Armed Services from <span class="mono">1.24</span> to <span class="mono">−0.01</span>. The hedge works.</p>
   <p class="measure">But alpha does not survive the hedge. Track A's long–short alpha is <span class="mono">−0.40%</span>/yr (t = −0.09). Once market exposure is removed, essentially nothing remains. That is the cleanest statement the data supports: <strong>these portfolios were long the market, and the market was what paid them.</strong></p>
 </section>
+
+<section>
+  <h2 class="sec">What the portfolio actually was</h2>
+  <p class="lede measure">The regressions say whether there is alpha. They say nothing about what was held, what produced the return, or how fragile it was. This section is descriptive only.</p>
+
+  <div class="note measure">
+    <p style="margin:0">These figures are computed with full knowledge of evaluation-window returns — that is what attribution <em>is</em>. Nothing here may feed back into the split, the holding rule, the weighting or the member list. Dropping a name because it dominated the return would be selection on the outcome, and would void the out-of-sample design the rest of the study rests on.</p>
+  </div>
+
+  <div class="viz">
+    <p class="vtitle">1 · Contribution by position</p>
+    <p class="vsub measure">Summed monthly weight × return, in percentage points of the portfolio's +95.3% total. Twelve largest contributors and six largest detractors, of 130 names held.</p>
+    <div class="chart-scroll"><svg id="c1" viewBox="0 0 700 430" role="img" aria-label="Contribution by position. NVDA contributes 29.4 percentage points, roughly a third of the portfolio's total return; no other position exceeds 12.2."></svg></div>
+    <div class="vkey"><span><i style="background:var(--pos)"></i>added to return</span><span><i style="background:var(--neg)"></i>subtracted</span></div>
+    <p class="ci-note">One position — NVDA — accounts for <strong>30.8%</strong> of the entire five-year return, held by just two of the eight members. KD and NOW clear 10% and 8% on average weights of 13% and 18%, because each is held by a member carrying almost nothing else.</p>
+  </div>
+
+  <div class="viz">
+    <p class="vtitle">2 · Cumulative concentration</p>
+    <p class="vsub measure">Names added in order of contribution. The curve overshoots 100% and is dragged back by the detractors.</p>
+    <div class="chart-scroll"><svg id="c2" viewBox="0 0 700 300" role="img" aria-label="Cumulative contribution curve. The top 10 of 130 names reach 85 percent of total return; the curve peaks at 127 percent before detractors pull it back to 100 percent."></svg></div>
+    <p class="ci-note">Ten names of 130 produce <strong>85%</strong> of the return. The curve then climbs to <strong>127%</strong> before the losing half drags it back to 100 — so the headline figure is a large gross gain net of a substantial gross loss, not a broad, steady accumulation.</p>
+  </div>
+
+  <div class="viz">
+    <p class="vtitle">3 · The portfolio thins out</p>
+    <p class="vsub measure">Active members and distinct names held, every month of the evaluation window. Shaded band marks the months with two or fewer active members.</p>
+    <div class="chart-scroll"><svg id="c3" viewBox="0 0 700 320" role="img" aria-label="Active members fall from six or seven in 2020 to two by 2024, and distinct names from about forty-five to seven."></svg></div>
+    <p class="ci-note"><strong>This is the study's biggest structural weakness.</strong> Positions roll off 12 months after disclosure and are never replaced once a member stops filing. By the shaded period — 14 of 60 months — the "top quartile of congressional traders" is two people holding about seven stocks. The last quarter of the regression window is measuring something much smaller than the group it claims to test.</p>
+  </div>
+
+  <div class="viz">
+    <p class="vtitle">4 · Where the return came from, by sector</p>
+    <p class="vsub measure">Contribution in percentage points. Sector labels are descriptive here; Track B's sector restriction is applied separately, upstream.</p>
+    <div class="chart-scroll"><svg id="c4" viewBox="0 0 700 330" role="img" aria-label="Information Technology contributes 62.6 percentage points, two-thirds of total return, far ahead of Health Care at 11.7."></svg></div>
+    <div class="vkey"><span><i style="background:var(--pos)"></i>added to return</span><span><i style="background:var(--neg)"></i>subtracted</span></div>
+    <p class="ci-note">Information Technology carried <strong>66%</strong> of the return on <strong>43%</strong> of average weight. This was a concentrated large-cap technology book held through a technology bull market — which is also why β sits at 1.03 with an R² of 0.90.</p>
+  </div>
+
+  <h3>What this means for the alpha estimate</h3>
+  <div class="measure">
+    <p>None of this overturns the null result. It sharpens it. An estimate of <span class="mono">+3.49%</span>/yr with <span class="mono">t = 1.34</span> reads like a measured property of a strategy; the attribution shows what that number is actually made of — one semiconductor stock, two of eight members, and a book that thins to seven names before the window closes.</p>
+    <p>It also reinforces the underpowered reading. A portfolio this concentrated has high idiosyncratic variance, which widens the standard error and makes a modest true alpha undetectable by construction. The honest summary is not "these members had no skill" but <strong>"this portfolio could never have demonstrated skill at conventional significance, whatever was there."</strong></p>
+  </div>
+</section>
+
+<script>
+const AT = {"total": 95.3, "top": [{"t": "NVDA", "c": 29.36}, {"t": "MSFT", "c": 12.19}, {"t": "KD", "c": 10.57}, {"t": "NOW", "c": 7.92}, {"t": "AAPL", "c": 5.31}, {"t": "F", "c": 3.75}, {"t": "ARCC", "c": 3.38}, {"t": "MOS", "c": 3.23}, {"t": "TWST", "c": 3.01}, {"t": "ABBV", "c": 2.11}, {"t": "TDOC", "c": 1.78}, {"t": "XOM", "c": 1.72}], "bot": [{"t": "SCI", "c": -2.89}, {"t": "MU", "c": -2.12}, {"t": "QS", "c": -1.68}, {"t": "T", "c": -1.56}, {"t": "LZ", "c": -1.41}, {"t": "COIN", "c": -1.09}], "curve": [{"n": 1, "p": 30.8}, {"n": 2, "p": 43.6}, {"n": 3, "p": 54.7}, {"n": 4, "p": 63.0}, {"n": 5, "p": 68.6}, {"n": 6, "p": 72.5}, {"n": 7, "p": 76.1}, {"n": 8, "p": 79.5}, {"n": 9, "p": 82.6}, {"n": 10, "p": 84.8}, {"n": 11, "p": 86.7}, {"n": 12, "p": 88.5}, {"n": 13, "p": 90.1}, {"n": 14, "p": 91.5}, {"n": 15, "p": 92.8}, {"n": 16, "p": 94.0}, {"n": 17, "p": 95.3}, {"n": 18, "p": 96.5}, {"n": 19, "p": 97.7}, {"n": 20, "p": 98.9}, {"n": 21, "p": 100.0}, {"n": 22, "p": 101.1}, {"n": 23, "p": 102.2}, {"n": 24, "p": 103.2}, {"n": 25, "p": 104.2}, {"n": 26, "p": 105.3}, {"n": 27, "p": 106.3}, {"n": 28, "p": 107.2}, {"n": 29, "p": 108.1}, {"n": 30, "p": 109.0}, {"n": 31, "p": 109.9}, {"n": 32, "p": 110.7}, {"n": 33, "p": 111.5}, {"n": 34, "p": 112.3}, {"n": 35, "p": 113.0}, {"n": 36, "p": 113.7}, {"n": 37, "p": 114.4}, {"n": 38, "p": 115.0}, {"n": 39, "p": 115.6}, {"n": 40, "p": 116.2}, {"n": 41, "p": 116.8}, {"n": 42, "p": 117.3}, {"n": 43, "p": 117.8}, {"n": 44, "p": 118.3}, {"n": 45, "p": 118.8}, {"n": 46, "p": 119.2}, {"n": 47, "p": 119.7}, {"n": 48, "p": 120.1}, {"n": 49, "p": 120.5}, {"n": 50, "p": 120.9}, {"n": 51, "p": 121.3}, {"n": 52, "p": 121.6}, {"n": 53, "p": 122.0}, {"n": 54, "p": 122.3}, {"n": 55, "p": 122.7}, {"n": 56, "p": 123.0}, {"n": 57, "p": 123.3}, {"n": 58, "p": 123.5}, {"n": 59, "p": 123.8}, {"n": 60, "p": 124.0}, {"n": 61, "p": 124.3}, {"n": 62, "p": 124.5}, {"n": 63, "p": 124.7}, {"n": 64, "p": 124.9}, {"n": 65, "p": 125.1}, {"n": 66, "p": 125.3}, {"n": 67, "p": 125.5}, {"n": 68, "p": 125.7}, {"n": 69, "p": 125.9}, {"n": 70, "p": 126.0}, {"n": 71, "p": 126.1}, {"n": 72, "p": 126.3}, {"n": 73, "p": 126.3}, {"n": 74, "p": 126.4}, {"n": 75, "p": 126.4}, {"n": 76, "p": 126.5}, {"n": 77, "p": 126.5}, {"n": 78, "p": 126.5}, {"n": 79, "p": 126.5}, {"n": 80, "p": 126.6}, {"n": 81, "p": 126.6}, {"n": 82, "p": 126.6}, {"n": 83, "p": 126.6}, {"n": 84, "p": 126.6}, {"n": 85, "p": 126.6}, {"n": 86, "p": 126.6}, {"n": 87, "p": 126.6}, {"n": 88, "p": 126.6}, {"n": 89, "p": 126.5}, {"n": 90, "p": 126.5}, {"n": 91, "p": 126.5}, {"n": 92, "p": 126.4}, {"n": 93, "p": 126.4}, {"n": 94, "p": 126.3}, {"n": 95, "p": 126.2}, {"n": 96, "p": 126.1}, {"n": 97, "p": 125.9}, {"n": 98, "p": 125.8}, {"n": 99, "p": 125.6}, {"n": 100, "p": 125.4}, {"n": 101, "p": 125.2}, {"n": 102, "p": 124.9}, {"n": 103, "p": 124.6}, {"n": 104, "p": 124.3}, {"n": 105, "p": 124.0}, {"n": 106, "p": 123.7}, {"n": 107, "p": 123.4}, {"n": 108, "p": 123.0}, {"n": 109, "p": 122.6}, {"n": 110, "p": 122.2}, {"n": 111, "p": 121.7}, {"n": 112, "p": 121.1}, {"n": 113, "p": 120.5}, {"n": 114, "p": 119.9}, {"n": 115, "p": 119.2}, {"n": 116, "p": 118.5}, {"n": 117, "p": 117.7}, {"n": 118, "p": 117.0}, {"n": 119, "p": 116.1}, {"n": 120, "p": 115.3}, {"n": 121, "p": 114.4}, {"n": 122, "p": 113.4}, {"n": 123, "p": 112.4}, {"n": 124, "p": 111.3}, {"n": 125, "p": 110.1}, {"n": 126, "p": 108.7}, {"n": 127, "p": 107.0}, {"n": 128, "p": 105.3}, {"n": 129, "p": 103.0}, {"n": 130, "p": 100.0}], "decay": [{"d": "2020-01", "m": 7, "n": 45}, {"d": "2020-02", "m": 6, "n": 45}, {"d": "2020-03", "m": 6, "n": 41}, {"d": "2020-04", "m": 6, "n": 40}, {"d": "2020-05", "m": 6, "n": 41}, {"d": "2020-06", "m": 6, "n": 39}, {"d": "2020-07", "m": 5, "n": 37}, {"d": "2020-08", "m": 5, "n": 38}, {"d": "2020-09", "m": 5, "n": 42}, {"d": "2020-10", "m": 5, "n": 43}, {"d": "2020-11", "m": 5, "n": 44}, {"d": "2020-12", "m": 5, "n": 44}, {"d": "2021-01", "m": 5, "n": 48}, {"d": "2021-02", "m": 5, "n": 46}, {"d": "2021-03", "m": 5, "n": 50}, {"d": "2021-04", "m": 5, "n": 51}, {"d": "2021-05", "m": 5, "n": 41}, {"d": "2021-06", "m": 6, "n": 50}, {"d": "2021-07", "m": 6, "n": 48}, {"d": "2021-08", "m": 6, "n": 55}, {"d": "2021-09", "m": 6, "n": 60}, {"d": "2021-10", "m": 6, "n": 55}, {"d": "2021-11", "m": 6, "n": 56}, {"d": "2021-12", "m": 6, "n": 54}, {"d": "2022-01", "m": 6, "n": 44}, {"d": "2022-02", "m": 6, "n": 47}, {"d": "2022-03", "m": 6, "n": 44}, {"d": "2022-04", "m": 6, "n": 42}, {"d": "2022-05", "m": 6, "n": 45}, {"d": "2022-06", "m": 6, "n": 39}, {"d": "2022-07", "m": 6, "n": 41}, {"d": "2022-08", "m": 6, "n": 34}, {"d": "2022-09", "m": 5, "n": 29}, {"d": "2022-10", "m": 4, "n": 30}, {"d": "2022-11", "m": 4, "n": 34}, {"d": "2022-12", "m": 4, "n": 31}, {"d": "2023-01", "m": 4, "n": 30}, {"d": "2023-02", "m": 4, "n": 27}, {"d": "2023-03", "m": 4, "n": 25}, {"d": "2023-04", "m": 4, "n": 25}, {"d": "2023-05", "m": 4, "n": 21}, {"d": "2023-06", "m": 4, "n": 19}, {"d": "2023-07", "m": 4, "n": 15}, {"d": "2023-08", "m": 4, "n": 14}, {"d": "2023-09", "m": 4, "n": 12}, {"d": "2023-10", "m": 3, "n": 11}, {"d": "2023-11", "m": 2, "n": 7}, {"d": "2023-12", "m": 2, "n": 5}, {"d": "2024-01", "m": 2, "n": 5}, {"d": "2024-02", "m": 2, "n": 7}, {"d": "2024-03", "m": 2, "n": 8}, {"d": "2024-04", "m": 2, "n": 9}, {"d": "2024-05", "m": 2, "n": 9}, {"d": "2024-06", "m": 2, "n": 9}, {"d": "2024-07", "m": 2, "n": 9}, {"d": "2024-08", "m": 2, "n": 7}, {"d": "2024-09", "m": 2, "n": 6}, {"d": "2024-10", "m": 2, "n": 6}, {"d": "2024-11", "m": 2, "n": 6}, {"d": "2024-12", "m": 2, "n": 6}], "sectors": [{"s": "Information Technology", "c": 62.61}, {"s": "Health Care", "c": 11.71}, {"s": "Financials", "c": 7.75}, {"s": "Industrials", "c": 5.84}, {"s": "Energy", "c": 5.13}, {"s": "Materials", "c": 3.39}, {"s": "Real Estate", "c": 1.95}, {"s": "Consumer Staples", "c": 1.12}, {"s": "Utilities", "c": 0.47}, {"s": "Consumer Discretionary", "c": -1.28}, {"s": "Communication Services", "c": -2.44}], "members": [{"m": "Pete Sessions", "c": 38.59}, {"m": "Dwight Evans", "c": 25.35}, {"m": "Bob Gibbs", "c": 13.26}, {"m": "Suzan K. DelBene", "c": 8.46}, {"m": "Katherine M. Clark", "c": 7.93}, {"m": "Alan S. Lowenthal", "c": 1.59}, {"m": "Lamar Smith", "c": 0.43}, {"m": "Bradley S. Schneider", "c": -0.34}], "nTickers": 130, "peak": 126.6, "peakN": 84};
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const el=(n,a={})=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const tip=document.createElement("div"); tip.className="vtip"; document.body.appendChild(tip);
+  function hook(node,host,html){
+    node.addEventListener("mouseenter",ev=>{tip.innerHTML=html;tip.style.opacity="1";});
+    node.addEventListener("mousemove",ev=>{tip.style.left=ev.pageX+"px";tip.style.top=ev.pageY+"px";});
+    node.addEventListener("mouseleave",()=>{tip.style.opacity="0";});
+  }
+
+  /* ---------- 1 & 4: diverging horizontal bars ---------- */
+  function bars(id,rows,keyName,fmtLab,W,H,padL){
+    const svg=document.getElementById(id); if(!svg)return;
+    const padR=58,padT=14,padB=30,rowH=(H-padT-padB)/rows.length;
+    const vals=rows.map(r=>r.c), rawLo=Math.min(0,...vals), hi=Math.max(...vals);
+    // Pad the negative end of the domain so the longest negative bar stops well
+    // short of the label column -- otherwise its value label runs back into the
+    // ticker name and the two overprint.
+    const lo=rawLo-(hi-rawLo)*0.11;
+    const span=(hi-lo)||1, x0=padL, x1=W-padR;
+    const X=v=>x0+((v-lo)/span)*(x1-x0);
+    const zero=X(0);
+    // gridlines at round values
+    const step = hi>40?10:(hi>20?5:2);
+    for(let g=Math.ceil(lo/step)*step; g<=hi; g+=step){
+      svg.appendChild(el("line",{x1:X(g),y1:padT,x2:X(g),y2:H-padB,class:"vgrid"}));
+      const t=el("text",{x:X(g),y:H-padB+15,class:"vx","text-anchor":"middle"});
+      t.textContent=(g>0?"+":"")+g; svg.appendChild(t);
+    }
+    svg.appendChild(el("line",{x1:zero,y1:padT,x2:zero,y2:H-padB,class:"vaxis"}));
+    rows.forEach((r,i)=>{
+      const y=padT+i*rowH, bh=Math.min(15,rowH-5);
+      const pos=r.c>=0, bx=pos?zero:X(r.c), bw=Math.max(1.5,Math.abs(X(r.c)-zero));
+      const rect=el("rect",{x:bx,y:y+(rowH-bh)/2,width:bw,height:bh,class:"vbar",
+        fill:pos?"var(--pos)":"var(--neg)"});
+      svg.appendChild(rect);
+      hook(rect,svg,`<b>${r[keyName]}</b> &nbsp; ${r.c>0?"+":""}${r.c.toFixed(2)} pp`);
+      const lab=el("text",{x:padL-8,y:y+rowH/2+4,class:"vlab","text-anchor":"end"});
+      lab.textContent=fmtLab(r[keyName]); svg.appendChild(lab);
+      const val=el("text",{x:pos?X(r.c)+7:X(r.c)-7,y:y+rowH/2+4,class:"vval",
+        "text-anchor":pos?"start":"end"});
+      val.textContent=(r.c>0?"+":"")+r.c.toFixed(1); svg.appendChild(val);
+    });
+    const ax=el("text",{x:(x0+x1)/2,y:H-3,class:"vx","text-anchor":"middle"});
+    ax.textContent="contribution, percentage points"; svg.appendChild(ax);
+  }
+  bars("c1",AT.top.concat(AT.bot),"t",s=>s,700,430,66);
+  bars("c4",AT.sectors,"s",s=>s.length>26?s.slice(0,25)+"\u2026":s,700,330,182);
+
+  /* ---------- 2: cumulative concentration ---------- */
+  (function(){
+    const svg=document.getElementById("c2"); if(!svg)return;
+    const W=700,H=300,padL=48,padR=18,padT=16,padB=38;
+    const d=AT.curve, maxY=Math.max(...d.map(p=>p.p))*1.04;
+    const X=n=>padL+((n-1)/(d.length-1))*(W-padL-padR);
+    const Y=p=>H-padB-(p/maxY)*(H-padT-padB);
+    [0,25,50,75,100,125].forEach(g=>{
+      if(g>maxY)return;
+      svg.appendChild(el("line",{x1:padL,y1:Y(g),x2:W-padR,y2:Y(g),class:"vgrid"}));
+      const t=el("text",{x:padL-8,y:Y(g)+4,class:"vx","text-anchor":"end"});
+      t.textContent=g+"%"; svg.appendChild(t);
+    });
+    // the 100% reference = the portfolio's whole return
+    svg.appendChild(el("line",{x1:padL,y1:Y(100),x2:W-padR,y2:Y(100),
+      class:"vaxis","stroke-dasharray":"4 3"}));
+    let area=`M ${X(1)} ${Y(0)}`, line="";
+    d.forEach((p,i)=>{area+=` L ${X(p.n)} ${Y(p.p)}`; line+=(i?" L ":"M ")+X(p.n)+" "+Y(p.p);});
+    area+=` L ${X(d.length)} ${Y(0)} Z`;
+    svg.appendChild(el("path",{d:area,fill:"var(--pos)","fill-opacity":".13"}));
+    svg.appendChild(el("path",{d:line,fill:"none",stroke:"var(--pos)","stroke-width":"2"}));
+    svg.appendChild(el("line",{x1:padL,y1:H-padB,x2:W-padR,y2:H-padB,class:"vaxis"}));
+    [1,10,25,50,100,130].forEach(n=>{
+      if(n>d.length)return;
+      const t=el("text",{x:X(n),y:H-padB+16,class:"vx","text-anchor":"middle"});
+      t.textContent=n; svg.appendChild(t);
+    });
+    const ax=el("text",{x:(padL+W-padR)/2,y:H-6,class:"vx","text-anchor":"middle"});
+    ax.textContent="names included, ranked by contribution"; svg.appendChild(ax);
+    // annotate the top-10 crossing and the peak
+    [{n:10,lab:"top 10 = 85%"},{n:AT.peakN,lab:"peak "+AT.peak+"%"}].forEach(a=>{
+      const p=d[a.n-1]; if(!p)return;
+      svg.appendChild(el("circle",{cx:X(p.n),cy:Y(p.p),r:4.5,fill:"var(--pos)",
+        stroke:"var(--panel)","stroke-width":"2"}));
+      const t=el("text",{x:X(p.n)+9,y:Y(p.p)-7,class:"vval"});
+      t.textContent=a.lab; svg.appendChild(t);
+    });
+    // invisible hover targets
+    d.forEach(p=>{
+      const r=el("rect",{x:X(p.n)-2,y:padT,width:4,height:H-padT-padB,fill:"transparent"});
+      hook(r,svg,`top <b>${p.n}</b> names = <b>${p.p.toFixed(1)}%</b> of total return`);
+      svg.appendChild(r);
+    });
+  })();
+
+  /* ---------- 3: position decay, two small multiples ---------- */
+  (function(){
+    const svg=document.getElementById("c3"); if(!svg)return;
+    const W=700,padL=48,padR=18,PH=118,gap=26,padT=14,padB=34;
+    const d=AT.decay;
+    const X=i=>padL+(i/(d.length-1))*(W-padL-padR);
+    const thin=d.findIndex(p=>p.m<=2);
+    function panel(key,top,maxV,title,ticks){
+      const Y=v=>top+PH-(v/maxV)*PH;
+      if(thin>=0){
+        svg.appendChild(el("rect",{x:X(thin),y:top,width:X(d.length-1)-X(thin),
+          height:PH,fill:"var(--band)"}));
+      }
+      ticks.forEach(g=>{
+        svg.appendChild(el("line",{x1:padL,y1:Y(g),x2:W-padR,y2:Y(g),class:"vgrid"}));
+        const t=el("text",{x:padL-8,y:Y(g)+4,class:"vx","text-anchor":"end"});
+        t.textContent=g; svg.appendChild(t);
+      });
+      let area=`M ${X(0)} ${Y(0)}`, line="";
+      d.forEach((p,i)=>{area+=` L ${X(i)} ${Y(p[key])}`; line+=(i?" L ":"M ")+X(i)+" "+Y(p[key]);});
+      area+=` L ${X(d.length-1)} ${Y(0)} Z`;
+      svg.appendChild(el("path",{d:area,fill:"var(--pos)","fill-opacity":".15"}));
+      svg.appendChild(el("path",{d:line,fill:"none",stroke:"var(--pos)","stroke-width":"2"}));
+      svg.appendChild(el("line",{x1:padL,y1:Y(0),x2:W-padR,y2:Y(0),class:"vaxis"}));
+      const t=el("text",{x:padL,y:top-3,class:"vval"}); t.textContent=title; svg.appendChild(t);
+      d.forEach((p,i)=>{
+        const r=el("rect",{x:X(i)-3,y:top,width:6,height:PH,fill:"transparent"});
+        hook(r,svg,`<b>${p.d}</b> &nbsp; ${p.m} members · ${p.n} names`);
+        svg.appendChild(r);
+      });
+    }
+    panel("m",padT,8,"active members (of 8)",[0,2,4,6,8]);
+    panel("n",padT+PH+gap,60,"distinct names held",[0,20,40,60]);
+    const yb=padT+PH+gap+PH;
+    d.forEach((p,i)=>{
+      if(p.d.slice(5)!=="01")return;
+      const t=el("text",{x:X(i),y:yb+16,class:"vx","text-anchor":"middle"});
+      t.textContent=p.d.slice(0,4); svg.appendChild(t);
+    });
+    const lg=el("text",{x:W-padR,y:yb+32,class:"vx","text-anchor":"end"});
+    lg.textContent="shaded: months with \u2264 2 active members"; svg.appendChild(lg);
+  })();
+})();
+</script>
 
 <section>
   <h2 class="sec">Limitations</h2>
