@@ -103,3 +103,5 @@ def log_funnel(name, before, after, note=""):
     dropped = before - after
     pct = (dropped / before * 100) if before else 0.0
     print(f"  {name:<38} {before:>7,} -> {after:>7,}  (dropped {dropped:>6,}, {pct:5.1f}%) {note}")
+
+# test alpha feature 1 changes
